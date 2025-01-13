@@ -107,29 +107,6 @@ if(isset($_POST['docsub1']))
   background-color: #3c50c1;
   border-color: #3c50c1;
 }
-
-/* Add chat button styles */
-.chat-button {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    background: #342ac1;
-    color: white;
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    text-align: center;
-    line-height: 60px;
-    font-size: 24px;
-    cursor: pointer;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-    z-index: 1000;
-    transition: all 0.3s ease;
-}
-.chat-button:hover {
-    transform: scale(1.1);
-    background: #3c50c1;
-}
   </style>
 
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -161,6 +138,7 @@ if(isset($_POST['docsub1']))
       <a class="list-group-item list-group-item-action" href="#list-pres" id="list-pres-list"  role="tab" data-toggle="list" aria-controls="home">Prescription List</a>
       <a class="list-group-item list-group-item-action" href="#list-settings" id="list-adoc-list"  role="tab" data-toggle="list" aria-controls="home">Add Doctor</a>
       <a class="list-group-item list-group-item-action" href="#list-settings1" id="list-ddoc-list"  role="tab" data-toggle="list" aria-controls="home">Delete Doctor</a>
+      <a class="list-group-item list-group-item-action" href="HIMS/adminmainpage.php" target="_blank" id="list-mes-list" >Manage Inventory</a>
       <a class="list-group-item list-group-item-action" href="#list-mes" id="list-mes-list"  role="tab" data-toggle="list" aria-controls="home">Queries</a>
       
     </div><br>
@@ -257,6 +235,25 @@ if(isset($_POST['docsub1']))
                     </div>
                   </div>
                 </div>
+
+                <div class="col-sm-4" style="left: 18%;margin-top: 5%">
+                  <div class="panel panel-white no-radius text-center">
+                    <div class="panel-body" >
+                      <span class="fa-stack fa-2x"> 
+                        <i class="fa fa-square fa-stack-2x text-primary"></i> 
+                        <i class="fa fa-database fa-stack-1x fa-inverse"></i> 
+                      </span>
+                      <h4 class="StepTitle" style="margin-top: 5%;">Inventory Management</h4>
+                      <p class="cl-effect-1">
+                        <a href="HIMS/adminmainpage.php" class="btn btn-primary" style="margin-top: 5px;">
+                          <i class="fa fa-hospital-o"></i> Manage Inventory
+                        </a>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+
                 </div>
                         
 
@@ -620,10 +617,5 @@ if(isset($_POST['docsub1']))
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
    <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.10.1/sweetalert2.all.min.js"></script>
-   
-   <!-- Add before closing body tag -->
-   <a href="https://hospital-management-system-chatbot.streamlit.app/" target="_blank" class="chat-button" title="Chat with us">
-        <i class="fa fa-comments"></i>
-    </a>
   </body>
 </html>

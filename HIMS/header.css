@@ -1,0 +1,11 @@
+.head {
+    width: 80%;
+    background-color: #e6e6e6;
+    color: #003366;
+    float: right;
+    margin-top: 50px;
+    margin-right: 20px;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
