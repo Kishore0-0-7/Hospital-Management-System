@@ -26,7 +26,6 @@ if(isset($_POST['app-submit']))
   $contact = $_SESSION['contact'];
   $doctor=$_POST['doctor'];
   $email=$_SESSION['email'];
-  # $fees=$_POST['fees'];
   $docFees=$_POST['docFees'];
 
   $appdate=$_POST['appdate'];
@@ -57,33 +56,40 @@ if(isset($_POST['app-submit']))
             mysqli_real_escape_string($con, $apptime)
         ));
         
-        // Add error handling
-        if (!$query) {
-            error_log("MySQL Error: " . mysqli_error($con));
-            echo "<script>alert('Error booking appointment: " . addslashes(mysqli_error($con)) . "');</script>";
+        if($query) {
+            echo "<script>
+                alert('Your appointment successfully booked');
+                window.location.href = window.location.href;
+            </script>";
+            exit();
         } else {
-            echo "<script>alert('Your appointment successfully booked');</script>";
+            echo "<script>
+                alert('Unable to process your request. Please try again!');
+                window.location.href = window.location.href;
+            </script>";
+            exit();
         }
-          if($query)
-          {
-            echo "<script>alert('Your appointment successfully booked');</script>";
-          }
-          else{
-            echo "<script>alert('Unable to process your request. Please try again!');</script>";
-          }
+      } else {
+        echo "<script>
+            alert('We are sorry to inform that the doctor is not available in this time or date. Please choose different time or date!');
+            window.history.back();
+        </script>";
+        exit();
       }
-      else{
-        echo "<script>alert('We are sorry to inform that the doctor is not available in this time or date. Please choose different time or date!');</script>";
-      }
+    } else {
+      echo "<script>
+          alert('Select a time or date in the future!');
+          window.history.back();
+      </script>";
+      exit();
     }
-    else{
-      echo "<script>alert('Select a time or date in the future!');</script>";
-    }
+  } else {
+    echo "<script>
+        alert('Select a time or date in the future!');
+        window.history.back();
+    </script>";
+    exit();
   }
-  else{
-      echo "<script>alert('Select a time or date in the future!');</script>";
-  }
-  
 }
 
 if(isset($_GET['cancel']))
@@ -95,6 +101,14 @@ if(isset($_GET['cancel']))
     }
   }
 
+if(isset($_GET['complete']))
+{
+  $query=mysqli_query($con,"UPDATE appointmenttb SET status='completed' WHERE ID = '".$_GET['ID']."'");
+  if($query)
+  {
+    echo "<script>alert('Appointment marked as completed');</script>";
+  }
+}
 
 
 
@@ -146,7 +160,7 @@ if(isset($_GET["generate_bill"])){
 
   $content .= '
       <br/>
-      <h2 align ="center"> THE CARE CREW</h2></br>
+      <h2 align ="center">The Care Crew</h2></br>
       <h3 align ="center"> Bill</h3>
       
 
@@ -198,50 +212,157 @@ function get_specs(){
     
     <link href="https://fonts.googleapis.com/css?family=IBM+Plex+Sans&display=swap" rel="stylesheet">
       <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
-  <a class="navbar-brand" href="#"><i class="fa fa-user-plus" aria-hidden="true"></i> THE CARE CREW </a>
+  <a class="navbar-brand" href="#"><i class="fa fa-user-plus" aria-hidden="true"></i>The Care Crew</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
 
   <style >
     .bg-primary {
-    background: -webkit-linear-gradient(left, #3931af, #00c6ff);
-}
-.list-group-item.active {
-    z-index: 2;
-    color: #fff;
-    background-color: #342ac1;
-    border-color: #007bff;
-}
-.text-primary {
-    color: #342ac1!important;
-}
+      background: -webkit-linear-gradient(left, #3931af, #00c6ff);
+    }
+    .list-group-item.active {
+      z-index: 2;
+      color: #fff;
+      background-color: #342ac1;
+      border-color: #007bff;
+    }
+    .text-primary {
+      color: #342ac1!important;
+    }
 
-.btn-primary{
-  background-color: #3c50c1;
-  border-color: #3c50c1;
-}
-    /* Add these new styles for the chat button */
+    .btn-primary{
+      background-color: #3c50c1;
+      border-color: #3c50c1;
+    }
+
+    /* Analytics styles */
+    .tab-pane#list-analytics {
+      padding: 20px 0;
+    }
+    
+    .tab-pane#list-analytics .card {
+      margin-bottom: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .tab-pane#list-analytics .card-body {
+      padding: 25px;
+    }
+    
+    .tab-pane#list-analytics h4.card-title {
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 30px;
+    }
+    
+    .tab-pane#list-analytics h5.card-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 25px;
+    }
+    
+    .tab-pane#list-analytics .chart-container {
+      margin: auto;
+    }
+    
+    .tab-pane#list-analytics .rounded {
+      border-radius: 10px !important;
+    }
+    
+    .tab-pane#list-analytics .shadow-sm {
+      box-shadow: 0 2px 4px rgba(0,0,0,0.075) !important;
+    }
+    
+    .tab-pane#list-analytics .badge-pill {
+      font-size: 14px;
+      padding: 8px 16px;
+    }
+    
+    .tab-pane#list-analytics .alert {
+      border-radius: 8px;
+    }
+    
+    .tab-pane#list-analytics .prescription-stats h6 {
+      font-size: 13px;
+      font-weight: 600;
+    }
+    
+    .tab-pane#list-analytics .prescription-stats h4 {
+      font-size: 24px;
+      font-weight: 600;
+    }
+
+    /* Existing chat button styles */
     .chat-button {
         position: fixed;
-        bottom: 20px;
-        right: 20px;
-        background: #342ac1;
-        color: white;
+        bottom: 30px;
+        right: 30px;
         width: 60px;
         height: 60px;
         border-radius: 50%;
-        text-align: center;
-        line-height: 60px;
-        font-size: 24px;
-        cursor: pointer;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-        z-index: 1000;
-        transition: all 0.3s ease;
+        background: #342ac1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none !important;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        transition: transform 0.3s ease, background-color 0.3s ease;
+        z-index: 9999;
     }
+
+    .chat-button i {
+        color: white;
+        font-size: 24px;
+    }
+
     .chat-button:hover {
         transform: scale(1.1);
         background: #3c50c1;
+    }
+
+    .chat-button:hover i {
+        color: white;
+    }
+
+    /* Add these styles for appointment analytics boxes */
+    .tab-pane#list-analytics .stats-box {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 1.5rem;
+      transition: transform 0.2s;
+    }
+    
+    .tab-pane#list-analytics .stats-box:hover {
+      transform: translateY(-2px);
+    }
+    
+    .tab-pane#list-analytics .stats-box h6 {
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      opacity: 0.8;
+    }
+    
+    .tab-pane#list-analytics .stats-box h3 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin: 0;
+    }
+    
+    .tab-pane#list-analytics .row.g-3 {
+      margin: -0.5rem;
+    }
+    
+    .tab-pane#list-analytics .row.g-3 > div {
+      padding: 0.5rem;
+    }
+    
+    .tab-pane#list-analytics .chart-container {
+      margin-bottom: 1rem;
     }
   </style>
 
@@ -260,93 +381,493 @@ function get_specs(){
   <style type="text/css">
     button:hover{cursor:pointer;}
     #inputbtn:hover{cursor:pointer;}
+    
+    /* Chat button styles */
+    .chat-button {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: #342ac1;
+        color: white !important;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        text-align: center;
+        line-height: 60px;
+        font-size: 24px;
+        cursor: pointer;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        z-index: 1000;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .chat-button:hover {
+        transform: scale(1.1);
+        background: #3c50c1;
+        color: white !important;
+        text-decoration: none;
+    }
+
+    .chat-button i {
+        font-size: 24px;
+    }
   </style>
   <body style="padding-top:50px;">
-  
-   <div class="container-fluid" style="margin-top:50px;">
-    <h3 style = "margin-left: 40%;  padding-bottom: 20px; font-family: 'IBM Plex Sans', sans-serif;"> Welcome &nbsp<?php echo $username ?> 
-   </h3>
+   
+    <?php
+    // Show messages if they exist in session and then clear them
+    if(isset($_SESSION['success_msg'])) {
+        echo '<script>
+            window.onload = function() {
+                alert("'.$_SESSION['success_msg'].'");
+            }
+        </script>';
+        unset($_SESSION['success_msg']);
+    }
+    if(isset($_SESSION['error_msg'])) {
+        echo '<script>
+            window.onload = function() {
+                alert("'.$_SESSION['error_msg'].'");
+            }
+        </script>';
+        unset($_SESSION['error_msg']);
+    }
+    ?>
+
+    <div class="container-fluid" style="margin-top:50px;">
+    <h3 style="margin-left: 40%; padding-bottom: 20px;font-family: 'IBM Plex Sans', sans-serif;"> Welcome <?php echo $fname . " " . $lname; ?> </h3>
     <div class="row">
   <div class="col-md-4" style="max-width:25%; margin-top: 3%">
     <div class="list-group" id="list-tab" role="tablist">
       <a class="list-group-item list-group-item-action active" id="list-dash-list" data-toggle="list" href="#list-dash" role="tab" aria-controls="home">Dashboard</a>
       <a class="list-group-item list-group-item-action" id="list-home-list" data-toggle="list" href="#list-home" role="tab" aria-controls="home">Book Appointment</a>
-      <a class="list-group-item list-group-item-action" href="#app-hist" id="list-pat-list" role="tab" data-toggle="list" aria-controls="home">Appointment History</a>
-      <a class="list-group-item list-group-item-action" href="#list-pres" id="list-pres-list" role="tab" data-toggle="list" aria-controls="home">Prescriptions</a>
-      
+      <a class="list-group-item list-group-item-action" id="list-pat-list" data-toggle="list" href="#app-hist" role="tab" aria-controls="home">Appointment History</a>
+      <a class="list-group-item list-group-item-action" id="list-pres-list" data-toggle="list" href="#list-pres" role="tab" aria-controls="home">Prescriptions</a>
+      <a class="list-group-item list-group-item-action" id="list-health-list" data-toggle="list" href="#list-health" role="tab" aria-controls="home">Health Details</a>
+      <a class="list-group-item list-group-item-action" id="list-analytics-list" data-toggle="list" href="#list-analytics" role="tab" aria-controls="home">Analytics</a>
+      <a class="list-group-item list-group-item-action" id="list-docs-list" data-toggle="list" href="#list-docs" role="tab" aria-controls="home">Documents</a>
     </div><br>
   </div>
   <div class="col-md-8" style="margin-top: 3%;">
     <div class="tab-content" id="nav-tabContent" style="width: 950px;">
 
+      <!-- Analytics Section -->
+      <div class="tab-pane fade" id="list-analytics" role="tabpanel" aria-labelledby="list-analytics-list">
+        <div class="container-fluid">
+          <div class="card">
+            <div class="card-body">
+              <h4 class="card-title text-center mb-4">Patient Analytics Dashboard</h4>
+              
+              <!-- Appointment Tracking with Chart -->
+              <div class="row mb-4">
+                <div class="col-md-12">
+                  <div class="card bg-light">
+                    <div class="card-body">
+                      <h5 class="card-title text-center mb-4">Appointment Analytics</h5>
+                      <div class="row align-items-center">
+                        <div class="col-md-6">
+                          <div class="chart-container" style="position: relative; height:300px; width:100%">
+                            <canvas id="appointmentChart"></canvas>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="row g-3">
+                            <?php
+                              // Get appointment statistics
+                              $appt_query = mysqli_query($con, "SELECT 
+                                COUNT(*) as total_appointments,
+                                SUM(CASE WHEN userStatus=1 AND doctorStatus=1 THEN 1 ELSE 0 END) as completed_appointments,
+                                SUM(CASE WHEN userStatus=0 OR doctorStatus=0 THEN 1 ELSE 0 END) as cancelled_appointments,
+                                COUNT(DISTINCT doctor) as unique_doctors
+                                FROM appointmenttb WHERE pid='$pid'");
+                              $appt_stats = mysqli_fetch_assoc($appt_query);
+                              
+                              // Calculate completion rate
+                              $completion_rate = ($appt_stats['total_appointments'] > 0) ? 
+                                round(($appt_stats['completed_appointments'] / $appt_stats['total_appointments']) * 100, 1) : 0;
+                            ?>
+                            <div class="col-6 mb-3">
+                              <div class="stats-box bg-primary text-white rounded shadow-sm">
+                                <h6 class="mb-2 text-white-50">Total Appointments</h6>
+                                <h3 class="mb-0 fw-bold"><?php echo $appt_stats['total_appointments']; ?></h3>
+                              </div>
+                            </div>
+                            <div class="col-6 mb-3">
+                              <div class="stats-box bg-success text-white rounded shadow-sm">
+                                <h6 class="mb-2 text-white-50">Completed</h6>
+                                <h3 class="mb-0 fw-bold"><?php echo $appt_stats['completed_appointments']; ?></h3>
+                              </div>
+                            </div>
+                            <div class="col-6 mb-3">
+                              <div class="stats-box bg-danger text-white rounded shadow-sm">
+                                <h6 class="mb-2 text-white-50">Cancelled</h6>
+                                <h3 class="mb-0 fw-bold"><?php echo $appt_stats['cancelled_appointments']; ?></h3>
+                              </div>
+                            </div>
+                            <div class="col-6 mb-3">
+                              <div class="stats-box bg-info text-white rounded shadow-sm">
+                                <h6 class="mb-2 text-white-50">Completion Rate</h6>
+                                <h3 class="mb-0 fw-bold"><?php echo $completion_rate; ?>%</h3>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
 
-      <div class="tab-pane fade  show active" id="list-dash" role="tabpanel" aria-labelledby="list-dash-list">
-        <div class="container-fluid container-fullw bg-white" >
+              <!-- BMI and Prescription Analysis -->
               <div class="row">
-               <div class="col-sm-4" style="left: 5%">
-                  <div class="panel panel-white no-radius text-center">
-                    <div class="panel-body">
-                      <span class="fa-stack fa-2x"> <i class="fa fa-square fa-stack-2x text-primary"></i> <i class="fa fa-terminal fa-stack-1x fa-inverse"></i> </span>
-                      <h4 class="StepTitle" style="margin-top: 5%;"> Book My Appointment</h4>
-                      <script>
-                        function clickDiv(id) {
-                          document.querySelector(id).click();
-                        }
-                      </script>                      
-                      <p class="links cl-effect-1">
-                        <a href="#list-home" onclick="clickDiv('#list-home-list')">
-                          Book Appointment
-                        </a>
-                      </p>
+                <div class="col-md-6">
+                  <div class="card bg-light h-100 shadow-sm">
+                    <div class="card-body">
+                      <h5 class="card-title text-center mb-4">BMI Analysis</h5>
+                      <div class="text-center mb-4">
+                        <div class="chart-container" style="position: relative; height:200px; width:100%">
+                          <canvas id="bmiChart"></canvas>
+                        </div>
+                      </div>
+                      <?php
+                        $health_query = mysqli_query($con, "SELECT * FROM patient_health_details WHERE pid='$pid'");
+                        if($health_info = mysqli_fetch_array($health_query)) {
+                          $height_m = $health_info['height'] / 100;
+                          $bmi = round($health_info['weight'] / ($height_m * $height_m), 1);
+                          
+                          // BMI Category and recommendations
+                          $bmi_category = "";
+                          $recommendations = "";
+                          if($bmi < 18.5) {
+                            $bmi_category = "Underweight";
+                            $recommendations = "Consider increasing caloric intake and strength training";
+                          } else if($bmi < 25) {
+                            $bmi_category = "Normal";
+                            $recommendations = "Maintain current healthy lifestyle";
+                          } else if($bmi < 30) {
+                            $bmi_category = "Overweight";
+                            $recommendations = "Focus on balanced diet and regular exercise";
+                          } else {
+                            $bmi_category = "Obese";
+                            $recommendations = "Consult with healthcare provider for weight management plan";
+                          }
+                      ?>
+                      <div class="bmi-stats">
+                        <div class="text-center mb-3">
+                          <h4 class="mb-2"><?php echo $bmi; ?></h4>
+                          <span class="badge badge-pill badge-<?php 
+                            echo ($bmi_category == 'Normal') ? 'success' : 
+                                (($bmi_category == 'Underweight') ? 'warning' : 'danger'); 
+                          ?> px-3 py-2">
+                            <?php echo $bmi_category; ?>
+                          </span>
+                        </div>
+                        <div class="alert alert-info mb-0">
+                          <strong>Recommendation:</strong><br>
+                          <?php echo $recommendations; ?>
+                        </div>
+                      </div>
+                      <?php } else { ?>
+                      <div class="text-center">
+                        <p class="text-muted">No BMI data available. Please update your health details.</p>
+                      </div>
+                      <?php } ?>
                     </div>
                   </div>
                 </div>
 
-                <div class="col-sm-4" style="left: 10%">
-                  <div class="panel panel-white no-radius text-center">
-                    <div class="panel-body" >
-                      <span class="fa-stack fa-2x"> <i class="fa fa-square fa-stack-2x text-primary"></i> <i class="fa fa-paperclip fa-stack-1x fa-inverse"></i> </span>
-                      <h4 class="StepTitle" style="margin-top: 5%;">My Appointments</h2>
-                    
-                      <p class="cl-effect-1">
-                        <a href="#app-hist" onclick="clickDiv('#list-pat-list')">
-                          View Appointment History
-                        </a>
-                      </p>
+                <div class="col-md-6">
+                  <div class="card bg-light h-100 shadow-sm">
+                    <div class="card-body">
+                      <h5 class="card-title text-center mb-4">Prescription Analytics</h5>
+                      <div class="chart-container mb-4" style="position: relative; height:200px; width:100%">
+                        <canvas id="prescriptionChart"></canvas>
+                      </div>
+                      <div class="prescription-stats">
+                        <?php
+                          $pres_query = mysqli_query($con, "SELECT 
+                            COUNT(*) as total_prescriptions,
+                            COUNT(DISTINCT doctor) as unique_doctors,
+                            GROUP_CONCAT(DISTINCT disease) as conditions,
+                            MAX(appdate) as last_prescription
+                            FROM prestb WHERE pid='$pid'");
+                          $pres_stats = mysqli_fetch_assoc($pres_query);
+                        ?>
+                        <div class="row text-center">
+                          <div class="col-6 mb-3">
+                            <div class="p-3 bg-light rounded border">
+                              <h6 class="text-muted mb-1">Total Prescriptions</h6>
+                              <h4 class="mb-0"><?php echo $pres_stats['total_prescriptions']; ?></h4>
+                            </div>
+                          </div>
+                          <div class="col-6 mb-3">
+                            <div class="p-3 bg-light rounded border">
+                              <h6 class="text-muted mb-1">Doctors Consulted</h6>
+                              <h4 class="mb-0"><?php echo $pres_stats['unique_doctors']; ?></h4>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="mt-3">
+                          <p class="mb-2"><strong>Conditions Treated:</strong><br>
+                            <span class="text-muted"><?php echo $pres_stats['conditions'] ? $pres_stats['conditions'] : 'None'; ?></span>
+                          </p>
+                          <p class="mb-0"><strong>Last Prescription:</strong><br>
+                            <span class="text-muted"><?php echo $pres_stats['last_prescription'] ? date('d-m-Y', strtotime($pres_stats['last_prescription'])) : 'None'; ?></span>
+                          </p>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
-                </div>
-
-                <div class="col-sm-4" style="left: 20%;margin-top:5%">
-                  <div class="panel panel-white no-radius text-center">
-                    <div class="panel-body" >
-                      <span class="fa-stack fa-2x"> <i class="fa fa-square fa-stack-2x text-primary"></i> <i class="fa fa-list-ul fa-stack-1x fa-inverse"></i> </span>
-                      <h4 class="StepTitle" style="margin-top: 5%;">Prescriptions</h2>
-                    
-                      <p class="cl-effect-1">
-                        <a href="#list-pres" onclick="clickDiv('#list-pres-list')">
-                          View Prescription List
-                        </a>
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                
-         
+              </div>
             </div>
           </div>
+        </div>
+      </div>
 
+      <!-- Document Management Section -->
+      <div class="tab-pane fade" id="list-docs" role="tabpanel" aria-labelledby="list-docs-list">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Document Management</h4>
+                
+                <!-- Upload Document Form -->
+                <div class="mb-4">
+                    <h5>Upload New Document</h5>
+                    <form action="document_handler.php" method="post" enctype="multipart/form-data" class="form-group">
+                        <input type="hidden" name="pid" value="<?php echo $pid; ?>">
+                        <input type="hidden" name="uploaded_by" value="patient">
+                        
+                        <div class="form-group">
+                            <label for="document">Select Document (PDF, JPEG, PNG, DOC):</label>
+                            <input type="file" class="form-control-file" id="document" name="document" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="description">Description:</label>
+                            <textarea class="form-control" id="description" name="description" rows="2" required></textarea>
+                        </div>
+                        
+                        <button type="submit" name="upload_document" class="btn btn-primary">Upload Document</button>
+                    </form>
+                </div>
+                
+                <!-- Documents List -->
+                <div>
+                    <h5>My Documents</h5>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Document Name</th>
+                                    <th>Type</th>
+                                    <th>Uploaded By</th>
+                                    <th>Upload Date</th>
+                                    <th>Description</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                $docs_query = mysqli_query($con, "SELECT * FROM documents WHERE pid='$pid' ORDER BY upload_date DESC");
+                                while($doc = mysqli_fetch_array($docs_query)) {
+                                    $doc_type = explode('/', $doc['document_type'])[1];
+                                    echo "<tr>
+                                        <td>{$doc['document_name']}</td>
+                                        <td>{$doc_type}</td>
+                                        <td>{$doc['uploaded_by']}</td>
+                                        <td>" . date('Y-m-d H:i', strtotime($doc['upload_date'])) . "</td>
+                                        <td>{$doc['description']}</td>
+                                        <td>
+                                            <a href='document_handler.php?download={$doc['id']}' class='btn btn-sm btn-info'>Download</a>
+                                            " . ($doc['uploaded_by'] == 'patient' ? 
+                                            "<a href='document_handler.php?delete={$doc['id']}' class='btn btn-sm btn-danger' onclick='return confirm(\"Are you sure you want to delete this document?\")'>Delete</a>" 
+                                            : "") . "
+                                        </td>
+                                    </tr>";
+                                }
+                                ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
 
+      <!-- Dashboard Section -->
+      <div class="tab-pane fade show active" id="list-dash" role="tabpanel" aria-labelledby="list-dash-list">
+        <div class="container-fluid container-fullw bg-white">
+          <div class="row">
+            <!-- Appointments Panel -->
+            <div class="col-sm-4 mb-4">
+              <div class="panel panel-white no-radius text-center shadow-sm">
+                <div class="panel-body">
+                  <span class="fa-stack fa-2x"> 
+                    <i class="fa fa-square fa-stack-2x text-primary"></i> 
+                    <i class="fa fa-calendar fa-stack-1x fa-inverse"></i> 
+                  </span>
+                  <h4 class="StepTitle" style="margin-top: 5%;"> Appointments</h4>
+                  <p class="links cl-effect-1">
+                    <a href="#list-home">
+                      Book New Appointment
+                    </a>
+                    <br>
+                    <a href="#app-hist">
+                      View Appointment History
+                    </a>
+                  </p>
+                </div>
+              </div>
+            </div>
 
+            <!-- Health Records Panel -->
+            <div class="col-sm-4 mb-4">
+              <div class="panel panel-white no-radius text-center shadow-sm">
+                <div class="panel-body">
+                  <span class="fa-stack fa-2x"> 
+                    <i class="fa fa-square fa-stack-2x text-primary"></i> 
+                    <i class="fa fa-heartbeat fa-stack-1x fa-inverse"></i> 
+                  </span>
+                  <h4 class="StepTitle" style="margin-top: 5%;"> Health Records</h4>
+                  <?php
+                  $health_query = mysqli_query($con, "SELECT * FROM patient_health_details WHERE pid='$pid'");
+                  if($health_info = mysqli_fetch_array($health_query)) {
+                    $bmi = 0;
+                    if($health_info['height'] > 0) {
+                      $height_m = $health_info['height'] / 100;
+                      $bmi = round($health_info['weight'] / ($height_m * $height_m), 1);
+                    }
+                  ?>
+                  <div class="health-summary text-left p-3">
+                    <p><strong>BMI:</strong> <?php echo $bmi; ?> 
+                      (<?php 
+                      if($bmi < 18.5) echo "Underweight";
+                      else if($bmi < 25) echo "Normal";
+                      else if($bmi < 30) echo "Overweight";
+                      else echo "Obese";
+                      ?>)
+                    </p>
+                    <p><strong>Next Checkup:</strong> 
+                      <?php 
+                      $next_checkup = strtotime("+3 months", strtotime($health_info['last_updated']));
+                      echo date("Y-m-d", $next_checkup);
+                      ?>
+                    </p>
+                  </div>
+                  <?php } ?>
+                  <p class="links cl-effect-1">
+                    <a href="#list-health">
+                      View/Update Health Details
+                    </a>
+                  </p>
+                </div>
+              </div>
+            </div>
 
+            <!-- Prescriptions Panel -->
+            <div class="col-sm-4 mb-4">
+              <div class="panel panel-white no-radius text-center shadow-sm">
+                <div class="panel-body">
+                  <span class="fa-stack fa-2x"> 
+                    <i class="fa fa-square fa-stack-2x text-primary"></i> 
+                    <i class="fa fa-list-alt fa-stack-1x fa-inverse"></i> 
+                  </span>
+                  <h4 class="StepTitle" style="margin-top: 5%;"> Prescriptions</h4>
+                  <?php
+                  $pres_query = mysqli_query($con, "SELECT COUNT(*) as total FROM prestb WHERE pid='$pid'");
+                  $pres_count = mysqli_fetch_assoc($pres_query)['total'];
+                  ?>
+                  <p class="text-muted">Total Prescriptions: <?php echo $pres_count; ?></p>
+                  <p class="links cl-effect-1">
+                    <a href="#list-pres">
+                      View Prescriptions & Bills
+                    </a>
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Analytics Panel -->
+            <div class="col-sm-4 mb-4">
+              <div class="panel panel-white no-radius text-center shadow-sm">
+                <div class="panel-body">
+                  <span class="fa-stack fa-2x"> 
+                    <i class="fa fa-square fa-stack-2x text-primary"></i> 
+                    <i class="fa fa-bar-chart fa-stack-1x fa-inverse"></i> 
+                  </span>
+                  <h4 class="StepTitle" style="margin-top: 5%;"> Analytics</h4>
+                  <?php
+                  $total_visits = mysqli_fetch_assoc(mysqli_query($con, 
+                    "SELECT COUNT(*) as total FROM appointmenttb 
+                     WHERE pid='$pid' AND userStatus=1 AND doctorStatus=1"))['total'];
+                  ?>
+                  <p class="text-muted">Total Visits: <?php echo $total_visits; ?></p>
+                  <p class="links cl-effect-1">
+                    <a href="#list-analytics">
+                      View Health Analytics
+                    </a>
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Documents Panel -->
+            <div class="col-sm-4 mb-4">
+              <div class="panel panel-white no-radius text-center shadow-sm">
+                <div class="panel-body">
+                  <span class="fa-stack fa-2x"> 
+                    <i class="fa fa-square fa-stack-2x text-primary"></i> 
+                    <i class="fa fa-file-text fa-stack-1x fa-inverse"></i> 
+                  </span>
+                  <h4 class="StepTitle" style="margin-top: 5%;"> Documents</h4>
+                  <?php
+                  $docs_query = mysqli_query($con, "SELECT COUNT(*) as total FROM documents WHERE pid='$pid'");
+                  $docs_count = mysqli_fetch_assoc($docs_query)['total'];
+                  ?>
+                  <p class="text-muted">Uploaded Documents: <?php echo $docs_count; ?></p>
+                  <p class="links cl-effect-1">
+                    <a href="#list-docs">
+                      Manage Documents
+                    </a>
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Chat Support Panel -->
+            <div class="col-sm-4 mb-4">
+              <div class="panel panel-white no-radius text-center shadow-sm">
+                <div class="panel-body">
+                  <span class="fa-stack fa-2x"> 
+                    <i class="fa fa-square fa-stack-2x text-primary"></i> 
+                    <i class="fa fa-comments fa-stack-1x fa-inverse"></i> 
+                  </span>
+                  <h4 class="StepTitle" style="margin-top: 5%;"> Support</h4>
+                  <p class="text-muted">24/7 Chat Support Available</p>
+                  <p class="links cl-effect-1">
+                    <a href="javascript:void(0)" onclick="window.open('https://hospital-management-system-chatbot.streamlit.app/', '_blank')">
+                      Chat with Support
+                    </a>
+                  </p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
 
       <div class="tab-pane fade" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
         <div class="container-fluid">
           <div class="card">
             <div class="card-body">
               <center><h4>Create an appointment</h4></center><br>
-              <form class="form-group" method="post" action="admin-panel.php">
+              <form class="form-group" method="post" action="admin-panel.php" id="appointmentForm">
                 <div class="row">
                   
                   <!-- <?php
@@ -481,7 +1002,7 @@ function get_specs(){
                   </div><br><br>
 
                   <div class="col-md-4">
-                    <input type="submit" name="app-submit" value="Create new entry" class="btn btn-primary" id="inputbtn">
+                    <input type="submit" name="app-submit" value="Create new entry" class="btn btn-primary" id="submitBtn">
                   </div>
                   <div class="col-md-8"></div>                  
                 </div>
@@ -511,7 +1032,7 @@ function get_specs(){
                     $con=mysqli_connect("localhost","root","","myhmsdb");
                     global $con;
 
-                    $query = "select ID,doctor,docFees,appdate,apptime,userStatus,doctorStatus from appointmenttb where fname ='$fname' and lname='$lname';";
+                    $query = "select ID,doctor,docFees,appdate,apptime,userStatus,doctorStatus,status from appointmenttb where fname ='$fname' and lname='$lname';";
                     $result = mysqli_query($con,$query);
                     while ($row = mysqli_fetch_array($result)){
               
@@ -529,7 +1050,11 @@ function get_specs(){
                           <td>
                     <?php if(($row['userStatus']==1) && ($row['doctorStatus']==1))  
                     {
-                      echo "Active";
+                      if($row['status'] == 'completed') {
+                        echo "Completed";
+                      } else {
+                        echo "Active";
+                      }
                     }
                     if(($row['userStatus']==0) && ($row['doctorStatus']==1))  
                     {
@@ -543,17 +1068,25 @@ function get_specs(){
                         ?></td>
 
                         <td>
-                        <?php if(($row['userStatus']==1) && ($row['doctorStatus']==1))  
+                        <?php if(($row['userStatus']==1) && ($row['doctorStatus']==1) && $row['status'] != 'completed')  
                         { ?>
 
 													
 	                        <a href="admin-panel.php?ID=<?php echo $row['ID']?>&cancel=update" 
                               onClick="return confirm('Are you sure you want to cancel this appointment ?')"
                               title="Cancel Appointment" tooltip-placement="top" tooltip="Remove"><button class="btn btn-danger">Cancel</button></a>
+                          <a href="admin-panel.php?ID=<?php echo $row['ID']?>&complete=update" 
+                              onClick="return confirm('Mark this appointment as completed?')"
+                              title="Complete Appointment" tooltip-placement="top" tooltip="Complete">
+                              <button class="btn btn-success">Complete</button>
+                          </a>
 	                        <?php } else {
-
+                              if($row['status'] == 'completed') {
+                                echo "<span class='badge badge-success'>Completed</span>";
+                              } else {
                                 echo "Cancelled";
-                                } ?>
+                              }
+                            } ?>
                         
                         </td>
                       </tr>
@@ -631,6 +1164,122 @@ function get_specs(){
 
 
 
+      <div class="tab-pane fade" id="list-health" role="tabpanel" aria-labelledby="list-health-list">
+        <div class="card">
+            <div class="card-body">
+              <div class="row mb-4">
+                <div class="col-md-6">
+                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#healthDetailsModal">
+                    View Health Details
+                  </button>
+                </div>
+              </div>
+                <h4 class="card-title">Update Health Details</h4>
+                <form class="form-group" method="post" action="update_health_details.php">
+                    <div class="row">
+                        <div class="col-md-4"><label>Age:</label></div>
+                        <div class="col-md-8">
+                            <input type="number" class="form-control" name="age" required>
+                        </div>
+                    </div><br>
+                    <div class="row">
+                        <div class="col-md-4"><label>Blood Group:</label></div>
+                        <div class="col-md-8">
+                            <select class="form-control" name="blood_group" required>
+                                <option value="">Select Blood Group</option>
+                                <option value="A+">A+</option>
+                                <option value="A-">A-</option>
+                                <option value="B+">B+</option>
+                                <option value="B-">B-</option>
+                                <option value="AB+">AB+</option>
+                                <option value="AB-">AB-</option>
+                                <option value="O+">O+</option>
+                                <option value="O-">O-</option>
+                            </select>
+                        </div>
+                    </div><br>
+                    <div class="row">
+                        <div class="col-md-4"><label>Weight (kg):</label></div>
+                        <div class="col-md-8">
+                            <input type="number" step="0.01" class="form-control" name="weight" required>
+                        </div>
+                    </div><br>
+                    <div class="row">
+                        <div class="col-md-4"><label>Height (cm):</label></div>
+                        <div class="col-md-8"></div></div>
+                            <input type="number" step="0.01" class="form-control" name="height" required>
+                        </div>
+                    </div><br>
+                    <div class="row">
+                        <div class="col-md-4"><label>Medical Conditions:</label></div>
+                        <div class="col-md-8">
+                            <textarea class="form-control" name="medical_conditions" rows="3"></textarea>
+                        </div>
+                    </div><br>
+                    <div class="row">
+                        <div class="col-md-4"><label>Allergies:</label></div>
+                        <div class="col-md-8">
+                            <textarea class="form-control" name="allergies" rows="3"></textarea>
+                        </div>
+                    </div><br>
+                    <div class="row">
+                        <div class="col-md-4"><label>Current Medications:</label></div>
+                        <div class="col-md-8">
+                            <textarea class="form-control" name="current_medications" rows="3"></textarea>
+                    <input type="submit" name="update_health_details" value="Update Details" class="btn btn-primary">
+                </form>
+            </div>
+        </div>
+    </div>
+
+  <!-- Health Details Modal -->
+  <div class="modal fade" id="healthDetailsModal" tabindex="-1" role="dialog" aria-labelledby="healthDetailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="healthDetailsModalLabel">My Health Details</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-6">
+              <h6>Personal Information</h6>
+              <p><strong>Patient ID:</strong> <?php echo $pid; ?></p>
+              <p><strong>Name:</strong> <?php echo $fname . ' ' . $lname; ?></p>
+              <p><strong>Gender:</strong> <?php echo $gender; ?></p>
+              <p><strong>Email:</strong> <?php echo $email; ?></p>
+              <p><strong>Contact:</strong> <?php echo $contact; ?></p>
+            </div>
+            <div class="col-md-6">
+              <h6>Health Information</h6>
+              <?php
+              // Fetch health details
+              $health_query = mysqli_query($con, "SELECT * FROM patient_health_details WHERE pid='$pid'");
+              if($health_info = mysqli_fetch_array($health_query)) {
+                echo "<p><strong>Age:</strong> ".$health_info['age']."</p>";
+                echo "<p><strong>Blood Group:</strong> ".$health_info['blood_group']."</p>";
+                echo "<p><strong>Weight:</strong> ".$health_info['weight']." kg</p>";
+                echo "<p><strong>Height:</strong> ".$health_info['height']." cm</p>";
+                echo "<p><strong>Medical Conditions:</strong> ".$health_info['medical_conditions']."</p>";
+                echo "<p><strong>Allergies:</strong> ".$health_info['allergies']."</p>";
+                echo "<p><strong>Current Medications:</strong> ".$health_info['current_medications']."</p>";
+                echo "<p><strong>Emergency Contact:</strong> ".$health_info['emergency_contact']." (".$health_info['emergency_contact_phone'].")</p>";
+              } else {
+                echo "<p>No health details available</p>";
+              }
+              ?>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
       <div class="tab-pane fade" id="list-messages" role="tabpanel" aria-labelledby="list-messages-list">...</div>
       <div class="tab-pane fade" id="list-settings" role="tabpanel" aria-labelledby="list-settings-list">
         <form class="form-group" method="post" action="func.php">
@@ -650,12 +1299,307 @@ function get_specs(){
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
-   <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.10.1/sweetalert2.all.min.js">
-   </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.10.1/sweetalert2.all.min.js"></script>
+    <!-- Add Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Charts Initialization -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get the appointment statistics from PHP
+        const completedAppointments = <?php echo $appt_stats['completed_appointments'] ?? 0; ?>;
+        const cancelledAppointments = <?php echo $appt_stats['cancelled_appointments'] ?? 0; ?>;
+        
+        // Initialize Appointment Chart
+        const appointmentCtx = document.getElementById('appointmentChart');
+        if (appointmentCtx) {
+            new Chart(appointmentCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Completed', 'Cancelled'],
+                    datasets: [{
+                        data: [completedAppointments, cancelledAppointments],
+                        backgroundColor: ['#28a745', '#dc3545'],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+        }
+
+        // Initialize BMI Chart
+        const bmiCtx = document.getElementById('bmiChart');
+        if (bmiCtx) {
+            const bmi = <?php echo $bmi ?? 0; ?>;
+            new Chart(bmiCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Your BMI'],
+                    datasets: [{
+                        label: 'BMI Value',
+                        data: [bmi],
+                        backgroundColor: [
+                            bmi < 18.5 ? '#ffc107' : 
+                            bmi < 25 ? '#28a745' : 
+                            bmi < 30 ? '#ffc107' : '#dc3545'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 40,
+                            ticks: {
+                                stepSize: 5
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+        }
+
+        // Initialize Prescription Chart
+        const prescriptionCtx = document.getElementById('prescriptionChart');
+        if (prescriptionCtx) {
+            const totalPrescriptions = <?php echo $pres_stats['total_prescriptions'] ?? 0; ?>;
+            const uniqueDoctors = <?php echo $pres_stats['unique_doctors'] ?? 0; ?>;
+            
+            new Chart(prescriptionCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Total Prescriptions', 'Doctors Consulted'],
+                    datasets: [{
+                        label: 'Count',
+                        data: [totalPrescriptions, uniqueDoctors],
+                        backgroundColor: ['#17a2b8', '#6610f2'],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+        }
+    });
+    </script>
 
     <!-- Add this right before the closing body tag -->
-    <a href="https://hospital-management-system-chatbot.streamlit.app/" target="_blank" class="chat-button" title="Chat with us">
+    <a href="javascript:void(0)" onclick="window.open('https://hospital-management-system-chatbot.streamlit.app/', '_blank')" class="chat-button" title="Chat with Support">
         <i class="fa fa-comments"></i>
     </a>
+
+    <script>
+    $(document).ready(function() {
+        // Function to switch tabs
+        function switchToTab(tabId) {
+            // Hide all tab panes
+            $('.tab-pane').removeClass('show active');
+            
+            // Show the selected tab pane
+            $(tabId).addClass('show active');
+            
+            // Update sidebar active state
+            $('.list-group-item').removeClass('active');
+            $('.list-group-item[href="' + tabId + '"]').addClass('active');
+        }
+
+        // Handle dashboard panel link clicks
+        $('.panel-body a').click(function(e) {
+            e.preventDefault();
+            switchToTab($(this).attr('href'));
+        });
+
+        // Handle sidebar tab clicks
+        $('.list-group-item').click(function(e) {
+            e.preventDefault();
+            switchToTab($(this).attr('href'));
+        });
+
+        // Show dashboard by default
+        $('#list-dash').addClass('show active');
+        $('#list-dash-list').addClass('active');
+    });
+    </script>
+
+    <!-- Add this new tab pane for documents -->
+    <div class="tab-pane fade" id="list-docs" role="tabpanel" aria-labelledby="list-docs-list">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Document Management</h4>
+                
+                <!-- Upload Document Form -->
+                <div class="mb-4">
+                    <h5>Upload New Document</h5>
+                    <form action="document_handler.php" method="post" enctype="multipart/form-data" class="form-group">
+                        <input type="hidden" name="pid" value="<?php echo $pid; ?>">
+                        <input type="hidden" name="uploaded_by" value="patient">
+                        
+                        <div class="form-group">
+                            <label for="document">Select Document (PDF, JPEG, PNG, DOC):</label>
+                            <input type="file" class="form-control-file" id="document" name="document" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="description">Description:</label>
+                            <textarea class="form-control" id="description" name="description" rows="2" required></textarea>
+                        </div>
+                        
+                        <button type="submit" name="upload_document" class="btn btn-primary">Upload Document</button>
+                    </form>
+                </div>
+                
+                <!-- Documents List -->
+                <div>
+                    <h5>My Documents</h5>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Document Name</th>
+                                    <th>Type</th>
+                                    <th>Uploaded By</th>
+                                    <th>Upload Date</th>
+                                    <th>Description</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                $docs_query = mysqli_query($con, "SELECT * FROM documents WHERE pid='$pid' ORDER BY upload_date DESC");
+                                while($doc = mysqli_fetch_array($docs_query)) {
+                                    $doc_type = explode('/', $doc['document_type'])[1];
+                                    echo "<tr>
+                                        <td>{$doc['document_name']}</td>
+                                        <td>{$doc_type}</td>
+                                        <td>{$doc['uploaded_by']}</td>
+                                        <td>" . date('Y-m-d H:i', strtotime($doc['upload_date'])) . "</td>
+                                        <td>{$doc['description']}</td>
+                                        <td>
+                                            <a href='document_handler.php?download={$doc['id']}' class='btn btn-sm btn-info'>Download</a>
+                                            " . ($doc['uploaded_by'] == 'patient' ? 
+                                            "<a href='document_handler.php?delete={$doc['id']}' class='btn btn-sm btn-danger' onclick='return confirm(\"Are you sure you want to delete this document?\")'>Delete</a>" 
+                                            : "") . "
+                                        </td>
+                                    </tr>";
+                                }
+                                ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add this script at the bottom of the file -->
+    <script>
+    document.getElementById('appointmentForm').addEventListener('submit', function(e) {
+        // Disable the submit button to prevent double submission
+        document.getElementById('submitBtn').disabled = true;
+    });
+
+    // Re-enable the submit button when the page is loaded/reloaded
+    window.onload = function() {
+        document.getElementById('submitBtn').disabled = false;
+    }
+    </script>
+
+    <!-- Add this script right after the opening <body> tag -->
+    <script>
+    function clickDiv(id) {
+      // Remove the -list suffix if present
+      const baseId = id.replace('-list', '');
+      
+      // Remove active class from all tabs
+      document.querySelectorAll('.list-group-item').forEach(item => {
+        item.classList.remove('active');
+      });
+      
+      // Hide all tab panes
+      document.querySelectorAll('.tab-pane').forEach(pane => {
+        pane.classList.remove('show', 'active');
+      });
+      
+      // Show selected tab pane
+      const targetPane = document.getElementById(baseId);
+      if (targetPane) {
+        targetPane.classList.add('show', 'active');
+        
+        // Find and activate the corresponding tab
+        const tabId = baseId + '-list';
+        const tab = document.getElementById(tabId);
+        if (tab) {
+          tab.classList.add('active');
+        }
+        
+        // Scroll to the section
+        targetPane.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    // Add event listeners when document is ready
+    document.addEventListener('DOMContentLoaded', function() {
+      // Handle tab switching from the sidebar
+      document.querySelectorAll('.list-group-item').forEach(item => {
+        item.addEventListener('click', function(e) {
+          e.preventDefault();
+          const href = this.getAttribute('href');
+          clickDiv(href);
+        });
+      });
+      
+      // Handle tab switching from dashboard links
+      document.querySelectorAll('.panel-body a[onclick]').forEach(link => {
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          const targetId = this.getAttribute('onclick').match(/'([^']+)'/)[1];
+          clickDiv(targetId);
+        });
+      });
+    });
+    </script>
+
+    <!-- Add this to ensure Bootstrap tab functionality works -->
+    <script>
+    $(document).ready(function() {
+        // Initialize Bootstrap tabs
+        $('[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+            // Update sidebar active state
+            $('.list-group-item').removeClass('active');
+            $('a[href="' + $(e.target).attr('href') + '"]').addClass('active');
+        });
+    });
+    </script>
   </body>
 </html>

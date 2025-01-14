@@ -8,17 +8,18 @@ $apptime='';
 $fname = '';
 $lname= '';
 $doctor = $_SESSION['dname'];
-if(isset($_GET['pid']) && isset($_GET['ID']) && ($_GET['appdate']) && isset($_GET['apptime']) && isset($_GET['fname']) && isset($_GET['lname'])) {
-$pid = $_GET['pid'];
-  $ID = $_GET['ID'];
-  $fname = $_GET['fname'];
-  $lname = $_GET['lname'];
-  $appdate = $_GET['appdate'];
-  $apptime = $_GET['apptime'];
+
+// Handle completion
+if(isset($_GET['complete']) && isset($_GET['ID'])) {
+  $query = mysqli_query($con,"update appointmenttb set status='completed' where ID = '".$_GET['ID']."'");
+  if($query) {
+    $_SESSION['success_msg'] = "Appointment marked as completed successfully!";
+    header("Location: doctor-panel.php");
+    exit();
+  }
 }
 
-
-
+// Handle prescription submission
 if(isset($_POST['prescribe']) && isset($_POST['pid']) && isset($_POST['ID']) && isset($_POST['appdate']) && isset($_POST['apptime']) && isset($_POST['lname']) && isset($_POST['fname'])){
   $appdate = $_POST['appdate'];
   $apptime = $_POST['apptime'];
@@ -31,17 +32,25 @@ if(isset($_POST['prescribe']) && isset($_POST['pid']) && isset($_POST['ID']) && 
   $prescription = $_POST['prescription'];
   
   $query=mysqli_query($con,"insert into prestb(doctor,pid,ID,fname,lname,appdate,apptime,disease,allergy,prescription) values ('$doctor','$pid','$ID','$fname','$lname','$appdate','$apptime','$disease','$allergy','$prescription')");
-    if($query)
-    {
-      echo "<script>alert('Prescribed successfully!');</script>";
-    }
-    else{
-      echo "<script>alert('Unable to process your request. Try again!');</script>";
-    }
-  // else{
-  //   echo "<script>alert('GET is not working!');</script>";
-  // }initial
-  // enga error?
+  if($query) {
+    $_SESSION['success_msg'] = "Prescription added successfully!";
+    header("Location: prescribe.php?pid=$pid&ID=$ID&fname=$fname&lname=$lname&appdate=$appdate&apptime=$apptime");
+    exit();
+  } else {
+    $_SESSION['error_msg'] = "Error adding prescription. Please try again.";
+    header("Location: prescribe.php?pid=$pid&ID=$ID&fname=$fname&lname=$lname&appdate=$appdate&apptime=$apptime");
+    exit();
+  }
+}
+
+// Get appointment details from URL
+if(isset($_GET['pid']) && isset($_GET['ID']) && isset($_GET['appdate']) && isset($_GET['apptime']) && isset($_GET['fname']) && isset($_GET['lname'])) {
+  $pid = $_GET['pid'];
+  $ID = $_GET['ID'];
+  $fname = $_GET['fname'];
+  $lname = $_GET['lname'];
+  $appdate = $_GET['appdate'];
+  $apptime = $_GET['apptime'];
 }
 
 ?>
@@ -111,11 +120,166 @@ if(isset($_POST['prescribe']) && isset($_POST['pid']) && isset($_POST['ID']) && 
   </style>
 
 <body style="padding-top:50px;">
+<?php
+// Show alerts if they exist in session and then clear them
+if(isset($_SESSION['success_msg'])) {
+    echo '<script>
+        window.onload = function() {
+            alert("'.$_SESSION['success_msg'].'");
+        }
+    </script>';
+    unset($_SESSION['success_msg']);
+}
+if(isset($_SESSION['error_msg'])) {
+    echo '<script>
+        window.onload = function() {
+            alert("'.$_SESSION['error_msg'].'");
+        }
+    </script>';
+    unset($_SESSION['error_msg']);
+}
+?>
    <div class="container-fluid" style="margin-top:50px;">
     <h3 style = "margin-left: 40%;  padding-bottom: 20px; font-family: 'IBM Plex Sans', sans-serif;"> Welcome &nbsp<?php echo $doctor ?>
    </h3>
 
-   <div class="tab-pane" id="list-pres" role="tabpanel" aria-labelledby="list-pres-list">
+   <!-- Add Patient Details Section -->
+   <div class="card mb-4">
+     <div class="card-header">
+       <h5 class="card-title">Patient Information</h5>
+     </div>
+     <div class="card-body">
+       <div class="row">
+         <div class="col-md-6">
+           <h6>Personal Details</h6>
+           <p><strong>Patient ID:</strong> <?php echo $pid; ?></p>
+           <p><strong>Name:</strong> <?php echo $fname . ' ' . $lname; ?></p>
+           <?php
+           // Fetch patient details
+           $pat_query = mysqli_query($con, "SELECT * FROM patreg WHERE pid='$pid'");
+           if($pat_info = mysqli_fetch_array($pat_query)) {
+             echo "<p><strong>Gender:</strong> ".$pat_info['gender']."</p>";
+             echo "<p><strong>Email:</strong> ".$pat_info['email']."</p>";
+             echo "<p><strong>Contact:</strong> ".$pat_info['contact']."</p>";
+           }
+           ?>
+         </div>
+         <div class="col-md-6">
+           <h6>Health Information</h6>
+           <?php
+           // Fetch health details
+           $health_query = mysqli_query($con, "SELECT * FROM patient_health_details WHERE pid='$pid'");
+           if($health_info = mysqli_fetch_array($health_query)) {
+             echo "<p><strong>Age:</strong> ".$health_info['age']."</p>";
+             echo "<p><strong>Blood Group:</strong> ".$health_info['blood_group']."</p>";
+             echo "<p><strong>Weight:</strong> ".$health_info['weight']." kg</p>";
+             echo "<p><strong>Height:</strong> ".$health_info['height']." cm</p>";
+             echo "<p><strong>Medical Conditions:</strong> ".$health_info['medical_conditions']."</p>";
+             echo "<p><strong>Allergies:</strong> ".$health_info['allergies']."</p>";
+             echo "<p><strong>Current Medications:</strong> ".$health_info['current_medications']."</p>";
+             echo "<p><strong>Emergency Contact:</strong> ".$health_info['emergency_contact']." (".$health_info['emergency_contact_phone'].")</p>";
+           } else {
+             echo "<p>No health details available</p>";
+           }
+           ?>
+         </div>
+       </div>
+       <!-- Update Health Details Form -->
+       <form class="form-group" method="post" action="update_health_details.php">
+         <input type="hidden" name="pid" value="<?php echo $pid; ?>" />
+         <div class="row">
+           <div class="col-md-6">
+             <label>Age:</label>
+             <input type="number" class="form-control" name="age" value="<?php echo $health_info['age']; ?>" required>
+           </div>
+           <div class="col-md-6">
+             <label>Blood Group:</label>
+             <select class="form-control" name="blood_group" required>
+               <option value="">Select Blood Group</option>
+               <option value="A+" <?php if($health_info['blood_group'] == 'A+') echo 'selected'; ?>>A+</option>
+               <option value="A-" <?php if($health_info['blood_group'] == 'A-') echo 'selected'; ?>>A-</option>
+               <option value="B+" <?php if($health_info['blood_group'] == 'B+') echo 'selected'; ?>>B+</option>
+               <option value="B-" <?php if($health_info['blood_group'] == 'B-') echo 'selected'; ?>>B-</option>
+               <option value="AB+" <?php if($health_info['blood_group'] == 'AB+') echo 'selected'; ?>>AB+</option>
+               <option value="AB-" <?php if($health_info['blood_group'] == 'AB-') echo 'selected'; ?>>AB-</option>
+               <option value="O+" <?php if($health_info['blood_group'] == 'O+') echo 'selected'; ?>>O+</option>
+               <option value="O-" <?php if($health_info['blood_group'] == 'O-') echo 'selected'; ?>>O-</option>
+             </select>
+           </div>
+         </div><br>
+         <div class="row">
+           <div class="col-md-6">
+             <label>Weight (kg):</label>
+             <input type="number" step="0.01" class="form-control" name="weight" value="<?php echo $health_info['weight']; ?>" required>
+           </div>
+           <div class="col-md-6">
+             <label>Height (cm):</label>
+             <input type="number" step="0.01" class="form-control" name="height" value="<?php echo $health_info['height']; ?>" required>
+           </div>
+         </div><br>
+         <div class="row">
+           <div class="col-md-6">
+             <label>Medical Conditions:</label>
+             <textarea class="form-control" name="medical_conditions" rows="3"><?php echo $health_info['medical_conditions']; ?></textarea>
+           </div>
+           <div class="col-md-6">
+             <label>Allergies:</label>
+             <textarea class="form-control" name="allergies" rows="3"><?php echo $health_info['allergies']; ?></textarea>
+           </div>
+         </div><br>
+         <div class="row">
+           <div class="col-md-6">
+             <label>Emergency Contact:</label>
+             <input type="text" class="form-control" name="emergency_contact" value="<?php echo $health_info['emergency_contact']; ?>" required>
+           </div>
+           <div class="col-md-6">
+             <label>Emergency Contact Phone:</label>
+             <input type="text" class="form-control" name="emergency_contact_phone" value="<?php echo $health_info['emergency_contact_phone']; ?>" required>
+           </div>
+         </div><br>
+         <input type="submit" name="update_health_details" value="Update Details" class="btn btn-primary">
+       </form>
+     </div>
+   </div>
+
+   <!-- Previous Prescriptions -->
+   <div class="card mb-4">
+     <div class="card-header">
+       <h5 class="card-title">Previous Prescriptions</h5>
+     </div>
+     <div class="card-body">
+       <div class="table-responsive">
+         <table class="table table-bordered">
+           <thead>
+             <tr></tr>
+               <th>Date</th>
+               <th>Doctor</th>
+               <th>Disease</th>
+               <th>Allergies</th>
+               <th>Prescription</th>
+             </tr>
+           </thead>
+           <tbody>
+             <?php
+             $prev_pres_query = mysqli_query($con, "SELECT * FROM prestb WHERE pid='$pid' ORDER BY appdate DESC");
+             while($prev_pres = mysqli_fetch_array($prev_pres_query)) {
+               echo "<tr>";
+               echo "<td>".$prev_pres['appdate']."</td>";
+               echo "<td>".$prev_pres['doctor']."</td>";
+               echo "<td>".$prev_pres['disease']."</td>";
+               echo "<td>".$prev_pres['allergy']."</td>";
+               echo "<td>".$prev_pres['prescription']."</td>";
+               echo "</tr>";
+             }
+             ?>
+           </tbody>
+         </table>
+       </div>
+     </div>
+   </div>
+
+   <!-- Original Prescription Form -->
+   <div class="tab-pane" id="list-pres" role="tabpanel" aria-labelledby="list-pres-list"></div>
         <form class="form-group" name="prescribeform" method="post" action="prescribe.php">
         
           <div class="row">
@@ -142,13 +306,23 @@ if(isset($_POST['prescribe']) && isset($_POST['pid']) && isset($_POST['ID']) && 
                   <input type="hidden" name="pid" value="<?php echo $pid ?>" />
                   <input type="hidden" name="ID" value="<?php echo $ID ?>" />
                   <br><br><br><br>
-          <input type="submit" name="prescribe" value="Prescribe" class="btn btn-primary" style="margin-left: 40pc;">
-          
-        </form>
-        <br>
+                  <div class="row">
+                    <div class="col-md-6">
+                      <input type="submit" name="prescribe" value="Prescribe" class="btn btn-primary" style="margin-left: 40pc;">
+                    </div>
+                    <div class="col-md-6">
+                      <a href="prescribe.php?ID=<?php echo $ID?>&complete=true" 
+                        onClick="return confirm('Have you added the prescription? Clicking OK will mark this appointment as completed.')"
+                        class="btn btn-success" style="margin-left: 40pc;">
+                        Complete Appointment
+                      </a>
+                    </div>
+                  </div>
+                </form>
+                <br>
         
       </div>
       </div>
-      
 
-  
+
+

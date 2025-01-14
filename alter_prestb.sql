@@ -1,0 +1,1 @@
+"USE myhmsdb; CREATE TABLE IF NOT EXISTS documents (id INT AUTO_INCREMENT PRIMARY KEY, pid INT, doctor_id VARCHAR(255), document_name VARCHAR(255), document_type VARCHAR(50), file_path VARCHAR(255), uploaded_by VARCHAR(50), upload_date DATETIME DEFAULT CURRENT_TIMESTAMP, description TEXT, FOREIGN KEY (pid) REFERENCES patreg(pid));"

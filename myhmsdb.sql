@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 12, 2025 at 06:10 PM
+-- Generation Time: Jan 14, 2025 at 02:30 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -36,15 +36,10 @@ CREATE TABLE IF NOT EXISTS `admintb` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
--- Truncate table before insert `admintb`
---
-
-TRUNCATE TABLE `admintb`;
---
 -- Dumping data for table `admintb`
 --
 
-INSERT DELAYED IGNORE INTO `admintb` (`username`, `password`) VALUES
+INSERT INTO `admintb` (`username`, `password`) VALUES
 ('admin', 'admin123');
 
 -- --------------------------------------------------------
@@ -68,31 +63,30 @@ CREATE TABLE IF NOT EXISTS `appointmenttb` (
   `apptime` time NOT NULL,
   `userStatus` int(5) NOT NULL,
   `doctorStatus` int(5) NOT NULL,
+  `status` varchar(20) DEFAULT NULL,
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
---
--- Truncate table before insert `appointmenttb`
---
-
-TRUNCATE TABLE `appointmenttb`;
 --
 -- Dumping data for table `appointmenttb`
 --
 
-INSERT DELAYED IGNORE INTO `appointmenttb` (`pid`, `ID`, `fname`, `lname`, `gender`, `email`, `contact`, `doctor`, `docFees`, `appdate`, `apptime`, `userStatus`, `doctorStatus`) VALUES
-(4, 1, 'vishnu', 'V', 'Male', 'vishnu@gmail.com', '9361070035', 'Ganesh', 550, '2020-02-14', '10:00:00', 1, 0),
-(4, 2, 'vishnu', 'V', 'Male', 'vishnu@gmail.com', '9361070035', 'Dinesh', 700, '2020-02-28', '10:00:00', 0, 1),
-(4, 3, 'vishnu', 'V', 'Male', 'vishnu@gmail.com', '9361070035', 'john', 1000, '2020-02-19', '03:00:00', 0, 1),
-(11, 4, 'jen', 's', 'Female', 'jen@gmail.com', '9768946252', 'ajay', 500, '2020-02-29', '20:00:00', 1, 1),
-(4, 5, 'vishnu', 'V', 'Male', 'vishnu@gmail.com', '9361070035', 'Dinesh', 700, '2020-02-28', '12:00:00', 1, 1),
-(4, 6, 'vishnu', 'V', 'Male', 'vishnu@gmail.com', '9361070035', 'Ganesh', 550, '2020-02-26', '15:00:00', 0, 1),
-(2, 8, 'priya', 'M', 'Female', 'priya@gmail.com', '8976897689', 'Ganesh', 550, '2020-03-21', '10:00:00', 1, 1),
-(5, 9, 'Gowtham', 'S', 'Male', 'Gowtham@gmail.com', '9070897653', 'Ganesh', 550, '2020-03-19', '20:00:00', 1, 0),
-(4, 10, 'vishnu', 'V', 'Male', 'vishnu@gmail.com', '9361070035', 'Ganesh', 550, '0000-00-00', '14:00:00', 1, 0),
-(4, 11, 'vishnu', 'V', 'Male', 'vishnu@gmail.com', '9361070035', 'Dinesh', 700, '2020-03-27', '15:00:00', 1, 1),
-(9, 12, 'yuvan', 'prasad', 'Male', 'yuvan@gmail.com', '8683619153', 'Kumar', 800, '2020-03-26', '12:00:00', 1, 1),
-(9, 13, 'yuvan', 'prasad', 'Male', 'yuvan@gmail.com', '8683619153', 'Tin', 450, '2020-03-26', '14:00:00', 1, 1);
+INSERT INTO `appointmenttb` (`pid`, `ID`, `fname`, `lname`, `gender`, `email`, `contact`, `doctor`, `docFees`, `appdate`, `apptime`, `userStatus`, `doctorStatus`, `status`) VALUES
+(4, 1, 'vishnu', 'V', 'Male', 'vishnu@gmail.com', '9361070035', 'Ganesh', 550, '2020-02-14', '10:00:00', 1, 0, NULL),
+(4, 2, 'vishnu', 'V', 'Male', 'vishnu@gmail.com', '9361070035', 'Dinesh', 700, '2020-02-28', '10:00:00', 0, 1, NULL),
+(4, 3, 'vishnu', 'V', 'Male', 'vishnu@gmail.com', '9361070035', 'john', 1000, '2020-02-19', '03:00:00', 0, 1, NULL),
+(11, 4, 'jen', 's', 'Female', 'jen@gmail.com', '9768946252', 'ajay', 500, '2020-02-29', '20:00:00', 1, 1, NULL),
+(4, 5, 'vishnu', 'V', 'Male', 'vishnu@gmail.com', '9361070035', 'Dinesh', 700, '2020-02-28', '12:00:00', 1, 1, NULL),
+(4, 6, 'vishnu', 'V', 'Male', 'vishnu@gmail.com', '9361070035', 'Ganesh', 550, '2020-02-26', '15:00:00', 0, 1, NULL),
+(2, 8, 'priya', 'M', 'Female', 'priya@gmail.com', '8976897689', 'Ganesh', 550, '2020-03-21', '10:00:00', 1, 1, NULL),
+(5, 9, 'Gowtham', 'S', 'Male', 'Gowtham@gmail.com', '9070897653', 'Ganesh', 550, '2020-03-19', '20:00:00', 1, 0, NULL),
+(4, 10, 'vishnu', 'V', 'Male', 'vishnu@gmail.com', '9361070035', 'Ganesh', 550, '0000-00-00', '14:00:00', 1, 0, NULL),
+(4, 11, 'vishnu', 'V', 'Male', 'vishnu@gmail.com', '9361070035', 'Dinesh', 700, '2020-03-27', '15:00:00', 1, 1, NULL),
+(9, 12, 'yuvan', 'prasad', 'Male', 'yuvan@gmail.com', '8683619153', 'Kumar', 800, '2020-03-26', '12:00:00', 1, 1, NULL),
+(9, 13, 'yuvan', 'prasad', 'Male', 'yuvan@gmail.com', '8683619153', 'Tin', 450, '2020-03-26', '14:00:00', 1, 1, NULL),
+(6, 14, 'sai', 'S', 'Male', 'sai@gmail.com', '9059986865', 'arun', 600, '2025-01-16', '12:00:00', 1, 2, 'completed'),
+(6, 15, 'sai', 'S', 'Male', 'sai@gmail.com', '9059986865', 'arun', 600, '2025-01-14', '14:00:00', 1, 1, 'completed'),
+(6, 16, 'sai', 'S', 'Male', 'sai@gmail.com', '9059986865', 'arun', 600, '2025-01-14', '16:00:00', 1, 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -109,15 +103,10 @@ CREATE TABLE IF NOT EXISTS `contact` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
--- Truncate table before insert `contact`
---
-
-TRUNCATE TABLE `contact`;
---
 -- Dumping data for table `contact`
 --
 
-INSERT DELAYED IGNORE INTO `contact` (`name`, `email`, `contact`, `message`) VALUES
+INSERT INTO `contact` (`name`, `email`, `contact`, `message`) VALUES
 ('Anu', 'anu@gmail.com', '7896677554', 'Hey Admin'),
 (' Viki', 'viki@gmail.com', '9899778865', 'Good Job, Pal'),
 ('Ananya', 'ananya@gmail.com', '9997888879', 'How can I reach you?'),
@@ -144,15 +133,10 @@ CREATE TABLE IF NOT EXISTS `doctb` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
--- Truncate table before insert `doctb`
---
-
-TRUNCATE TABLE `doctb`;
---
 -- Dumping data for table `doctb`
 --
 
-INSERT DELAYED IGNORE INTO `doctb` (`username`, `password`, `email`, `spec`, `docFees`) VALUES
+INSERT INTO `doctb` (`username`, `password`, `email`, `spec`, `docFees`) VALUES
 ('ajay', 'ajay123', 'ajay@gmail.com', 'General', 500),
 ('arun', 'arun123', 'arun@gmail.com', 'Cardiologist', 600),
 ('Dinesh', 'dinesh123', 'dinesh@gmail.com', 'General', 700),
@@ -161,6 +145,73 @@ INSERT DELAYED IGNORE INTO `doctb` (`username`, `password`, `email`, `spec`, `do
 ('john', 'john123', 'john@gmail.com', 'Cardiologist', 1000),
 ('Abi', 'Abi123', 'Abi@gmail.com', 'Neurologist', 1500),
 ('Tin', 'Tin123', 'Tin@gmail.com', 'Pediatrician', 450);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `documents`
+--
+
+DROP TABLE IF EXISTS `documents`;
+CREATE TABLE IF NOT EXISTS `documents` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `pid` int(11) DEFAULT NULL,
+  `doctor_id` varchar(255) DEFAULT NULL,
+  `document_name` varchar(255) DEFAULT NULL,
+  `document_type` varchar(50) DEFAULT NULL,
+  `file_path` varchar(255) DEFAULT NULL,
+  `uploaded_by` varchar(50) DEFAULT NULL,
+  `upload_date` datetime DEFAULT current_timestamp(),
+  `description` text DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `pid` (`pid`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `documents`
+--
+
+INSERT INTO `documents` (`id`, `pid`, `doctor_id`, `document_name`, `document_type`, `file_path`, `uploaded_by`, `upload_date`, `description`) VALUES
+(2, 6, 'arun', 'doc.pdf', 'application/pdf', 'uploads/678519e5560c5_doc.pdf', 'doctor', '2025-01-13 19:19:25', 'report');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `patient_health_details`
+--
+
+DROP TABLE IF EXISTS `patient_health_details`;
+CREATE TABLE IF NOT EXISTS `patient_health_details` (
+  `pid` int(11) NOT NULL,
+  `age` int(11) DEFAULT NULL,
+  `blood_group` varchar(5) DEFAULT NULL,
+  `weight` decimal(5,2) DEFAULT NULL,
+  `height` decimal(5,2) DEFAULT NULL,
+  `medical_conditions` text DEFAULT NULL,
+  `allergies` text DEFAULT NULL,
+  `current_medications` text DEFAULT NULL,
+  `family_history` text DEFAULT NULL,
+  `emergency_contact` varchar(100) DEFAULT NULL,
+  `emergency_contact_phone` varchar(15) DEFAULT NULL,
+  `last_updated` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`pid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `patient_health_details`
+--
+
+INSERT INTO `patient_health_details` (`pid`, `age`, `blood_group`, `weight`, `height`, `medical_conditions`, `allergies`, `current_medications`, `family_history`, `emergency_contact`, `emergency_contact_phone`, `last_updated`) VALUES
+(1, 18, 'O+', 54.00, 150.00, 'none', 'no', 'no', 'none', '1234567890', '9965422090', '2025-01-13 10:22:43'),
+(2, 45, 'B-', 69.00, 160.00, 'none', 'no', 'no', 'none', '1234567890', '9965422090', '2025-01-13 10:22:43'),
+(3, 7, 'A-', 16.00, 75.00, 'none', 'no', 'no', 'none', '1234567890v', '9965422090', '2025-01-13 10:22:43'),
+(4, 9, 'AB-', 19.00, 90.00, 'none', 'no', 'no', 'none', '1234567890', '9965422090', '2025-01-13 10:22:43'),
+(5, 22, 'A+', 50.00, 155.00, 'none', 'no', 'no', 'none', '1234567890', '9965422090', '2025-01-13 10:22:43'),
+(6, 19, 'O-', 65.00, 155.00, 'none', 'no', 'no', 'none', '1234567890', '9965422090', '2025-01-13 13:47:32'),
+(7, 63, 'B-', 70.00, 160.00, 'none', 'no', 'no', 'none', '1234567890', '9965422090', '2025-01-13 10:22:43'),
+(8, 70, 'O+', 83.00, 162.00, 'none', 'no', 'no', 'none', '1234567890', '9965422090', '2025-01-13 10:22:43'),
+(9, 14, 'O-', 26.00, 110.00, 'none', 'no', 'no', 'none', '1234567890', '9965422090', '2025-01-13 10:22:43'),
+(10, 7, 'AB+', 12.00, 100.00, 'none', 'no', 'no', 'none', '1234567890', '9965422090', '2025-01-13 10:22:43');
 
 -- --------------------------------------------------------
 
@@ -182,15 +233,10 @@ CREATE TABLE IF NOT EXISTS `patreg` (
 ) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
--- Truncate table before insert `patreg`
---
-
-TRUNCATE TABLE `patreg`;
---
 -- Dumping data for table `patreg`
 --
 
-INSERT DELAYED IGNORE INTO `patreg` (`pid`, `fname`, `lname`, `gender`, `email`, `contact`, `password`, `cpassword`) VALUES
+INSERT INTO `patreg` (`pid`, `fname`, `lname`, `gender`, `email`, `contact`, `password`, `cpassword`) VALUES
 (1, 'Anandh', 'K', 'Male', 'Anandh@gmail.com', '9876543210', 'Anandh123', 'Anandh123'),
 (2, 'priya', 'B', 'Female', 'priya@gmail.com', '8976897689', 'priya123', 'priya123'),
 (3, 'Shahrukh', 'k', 'Male', 'shahrukh@gmail.com', '8976898463', 'shahrukh123', 'shahrukh123'),
@@ -220,23 +266,55 @@ CREATE TABLE IF NOT EXISTS `prestb` (
   `apptime` time NOT NULL,
   `disease` varchar(250) NOT NULL,
   `allergy` varchar(250) NOT NULL,
-  `prescription` varchar(1000) NOT NULL
+  `prescription` text DEFAULT NULL,
+  `patient_details` text DEFAULT NULL,
+  `age` int(11) DEFAULT NULL,
+  `blood_group` varchar(5) DEFAULT NULL,
+  `height` decimal(5,2) DEFAULT NULL,
+  `weight` decimal(5,2) DEFAULT NULL,
+  `medical_history` text DEFAULT NULL,
+  `emergency_contact` varchar(15) DEFAULT NULL,
+  `emergency_relation` varchar(50) DEFAULT NULL,
+  `insurance_no` varchar(50) DEFAULT NULL,
+  `insurance_provider` varchar(100) DEFAULT NULL,
+  `patient_age` int(11) DEFAULT NULL,
+  `patient_blood_group` varchar(5) DEFAULT NULL,
+  `patient_height` decimal(5,2) DEFAULT NULL,
+  `patient_weight` decimal(5,2) DEFAULT NULL,
+  `patient_medical_history` text DEFAULT NULL,
+  `patient_emergency_contact` varchar(15) DEFAULT NULL,
+  `patient_emergency_relation` varchar(50) DEFAULT NULL,
+  `patient_insurance_no` varchar(50) DEFAULT NULL,
+  `patient_insurance_provider` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
---
--- Truncate table before insert `prestb`
---
-
-TRUNCATE TABLE `prestb`;
 --
 -- Dumping data for table `prestb`
 --
 
-INSERT DELAYED IGNORE INTO `prestb` (`doctor`, `pid`, `ID`, `fname`, `lname`, `appdate`, `apptime`, `disease`, `allergy`, `prescription`) VALUES
-('Dinesh', 4, 11, 'vishnu', 'V', '2020-03-27', '15:00:00', 'Cough', 'Nothing', 'Just take a teaspoon of Benadryl every night'),
-('Ganesh', 2, 8, 'priya', 'Bhatt', '2020-03-21', '10:00:00', 'Severe Fever', 'Nothing', 'Take bed rest'),
-('Kumar', 9, 12, 'yuvan', 'prasad', '2020-03-26', '12:00:00', 'Sever fever', 'nothing', 'Paracetamol -> 1 every morning and night'),
-('Tin', 9, 13, 'yuvan', 'prasad', '2020-03-26', '14:00:00', 'Cough', 'Skin dryness', 'Intake fruits with more water content');
+INSERT INTO `prestb` (`doctor`, `pid`, `ID`, `fname`, `lname`, `appdate`, `apptime`, `disease`, `allergy`, `prescription`, `patient_details`, `age`, `blood_group`, `height`, `weight`, `medical_history`, `emergency_contact`, `emergency_relation`, `insurance_no`, `insurance_provider`, `patient_age`, `patient_blood_group`, `patient_height`, `patient_weight`, `patient_medical_history`, `patient_emergency_contact`, `patient_emergency_relation`, `patient_insurance_no`, `patient_insurance_provider`) VALUES
+('Dinesh', 4, 11, 'vishnu', 'V', '2020-03-27', '15:00:00', 'Cough', 'Nothing', 'Just take a teaspoon of Benadryl every night', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+('Ganesh', 2, 8, 'priya', 'Bhatt', '2020-03-21', '10:00:00', 'Severe Fever', 'Nothing', 'Take bed rest', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+('Kumar', 9, 12, 'yuvan', 'prasad', '2020-03-26', '12:00:00', 'Sever fever', 'nothing', 'Paracetamol -> 1 every morning and night', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+('Tin', 9, 13, 'yuvan', 'prasad', '2020-03-26', '14:00:00', 'Cough', 'Skin dryness', 'Intake fruits with more water content', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+('arun', 6, 14, 'sai', 'S', '2025-01-16', '12:00:00', 'cold', 'none', 'drink cough syrup', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+('arun', 6, 14, 'sai', 'S', '2025-01-16', '12:00:00', 'cold', 'none', 'drink syrup', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `documents`
+--
+ALTER TABLE `documents`
+  ADD CONSTRAINT `documents_ibfk_1` FOREIGN KEY (`pid`) REFERENCES `patreg` (`pid`);
+
+--
+-- Constraints for table `patient_health_details`
+--
+ALTER TABLE `patient_health_details`
+  ADD CONSTRAINT `patient_health_details_ibfk_1` FOREIGN KEY (`pid`) REFERENCES `patreg` (`pid`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
