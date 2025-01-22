@@ -1,0 +1,24 @@
+.one {
+  border-radius: 5px;
+  box-sizing: border-box;
+  background-color: #f2f2f2;
+  padding: 30px;
+  padding-left: 60px;
+  width: 1175px;
+  float: right;
+  margin-right: 58px;
+  margin-top: 20px;
+  margin-bottom: 50px;
+  font-family: Arial, sans-serif;
+}
+
+.column {
+  float: left;
+  width: 50%;
+}
+
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
