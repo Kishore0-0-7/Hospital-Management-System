@@ -332,20 +332,51 @@ if(isset($_POST['docsub1']))
     <div class="row">
   <div class="col-md-4" style="max-width:25%;margin-top: 3%;">
     <div class="list-group" id="list-tab" role="tablist">
-      <a class="list-group-item list-group-item-action active" id="list-dash-list" data-toggle="list" href="#list-dash" role="tab" aria-controls="home">Dashboard</a>
-      <a class="list-group-item list-group-item-action" href="#list-doc" id="list-doc-list" role="tab" data-toggle="list" aria-controls="home">Doctor List</a>
-      <a class="list-group-item list-group-item-action" href="#list-pat" id="list-pat-list" role="tab" data-toggle="list" aria-controls="home">Patient List</a>
-      <a class="list-group-item list-group-item-action" href="#list-app" id="list-app-list" role="tab" data-toggle="list" aria-controls="home">Appointment Details</a>
-      <a class="list-group-item list-group-item-action" href="#list-pres" id="list-pres-list" role="tab" data-toggle="list" aria-controls="home">Prescription List</a>
-      <a class="list-group-item list-group-item-action" href="#list-settings" id="list-adoc-list" role="tab" data-toggle="list" aria-controls="home">Add Doctor</a>
-      <a class="list-group-item list-group-item-action" href="#list-settings1" id="list-ddoc-list" role="tab" data-toggle="list" aria-controls="home">Delete Doctor</a>
-      <a class="list-group-item list-group-item-action" href="#list-mes" id="list-mes-list" role="tab" data-toggle="list" aria-controls="home">Queries</a>
-      <a class="list-group-item list-group-item-action" href="#list-analytics" id="list-analytics-list" role="tab" data-toggle="list">Analytics Dashboard</a>
-      <a class="list-group-item list-group-item-action" href="#list-revenue" id="list-revenue-list" role="tab" data-toggle="list">Revenue Reports</a>
-      <a class="list-group-item list-group-item-action" href="#list-statistics" id="list-statistics-list" role="tab" data-toggle="list">Patient Statistics</a>
-      <a class="list-group-item list-group-item-action" href="#list-docs" id="list-docs-list" role="tab" data-toggle="list">Document Management</a>
-      <a class="list-group-item list-group-item-action" href="HIMS/adminmainpage.php" target="_blank">Inventory Management</a>
-      <a class="list-group-item list-group-item-action" id="list-predict-list" data-toggle="list" href="#list-predict" role="tab">Disease Prediction</a>
+      <a class="list-group-item list-group-item-action active" id="list-dash-list" data-toggle="list" href="#list-dash" role="tab" aria-controls="home">
+        <i class="fa fa-th-large"></i> Dashboard
+      </a>
+      <a class="list-group-item list-group-item-action" href="#list-doc" id="list-doc-list" role="tab" data-toggle="list" aria-controls="home">
+        <i class="fa fa-user-md"></i> Doctor List
+      </a>
+      <a class="list-group-item list-group-item-action" href="#list-pat" id="list-pat-list" role="tab" data-toggle="list" aria-controls="home">
+        <i class="fa fa-users"></i> Patient List
+      </a>
+      <a class="list-group-item list-group-item-action" href="#list-app" id="list-app-list" role="tab" data-toggle="list" aria-controls="home">
+        <i class="fa fa-calendar"></i> Appointment Details
+      </a>
+      <a class="list-group-item list-group-item-action" href="#list-pres" id="list-pres-list" role="tab" data-toggle="list" aria-controls="home">
+        <i class="fa fa-file-text"></i> Prescription List
+      </a>
+      <a class="list-group-item list-group-item-action" href="#list-settings" id="list-adoc-list" role="tab" data-toggle="list" aria-controls="home">
+        <i class="fa fa-user-plus"></i> Add Doctor
+      </a>
+      <a class="list-group-item list-group-item-action" href="#list-settings1" id="list-ddoc-list" role="tab" data-toggle="list" aria-controls="home">
+        <i class="fa fa-user-times"></i> Delete Doctor
+      </a>
+      <a class="list-group-item list-group-item-action" href="#list-mes" id="list-mes-list" role="tab" data-toggle="list" aria-controls="home">
+        <i class="fa fa-comments"></i> Queries
+      </a>
+      <a class="list-group-item list-group-item-action" href="#list-analytics" id="list-analytics-list" role="tab" data-toggle="list">
+        <i class="fa fa-line-chart"></i> Analytics Dashboard
+      </a>
+      <a class="list-group-item list-group-item-action" href="#list-revenue" id="list-revenue-list" role="tab" data-toggle="list">
+        <i class="fa fa-money"></i> Revenue Reports
+      </a>
+      <a class="list-group-item list-group-item-action" href="#list-statistics" id="list-statistics-list" role="tab" data-toggle="list">
+        <i class="fa fa-bar-chart"></i> Patient Statistics
+      </a>
+      <a class="list-group-item list-group-item-action" href="#list-docs" id="list-docs-list" role="tab" data-toggle="list">
+        <i class="fa fa-file"></i> Document Management
+      </a>
+      <a class="list-group-item list-group-item-action" href="HIMS/adminmainpage.php" target="_blank">
+        <i class="fa fa-hospital-o"></i> Inventory Management
+      </a>
+      <a class="list-group-item list-group-item-action" id="list-predict-list" data-toggle="list" href="#list-predict" role="tab">
+        <i class="fa fa-stethoscope"></i> Disease Prediction
+      </a>
+      <a class="list-group-item list-group-item-action" id="list-brain-list" data-toggle="list" href="#list-brain" role="tab">
+        <i class="fa fa-heartbeat"></i> Brain Tumor Detection
+      </a>
     </div><br>
   </div>
   <div class="col-md-8" style="margin-top: 3%;">
@@ -380,7 +411,25 @@ if(isset($_POST['docsub1']))
                   <h4 class="StepTitle" style="margin-top: 5%;">Disease Prediction</h4>
                   <p class="links cl-effect-1">
                     <a href="https://multiple-disease-prediction-hms.streamlit.app/" target="_blank">
-                      Launch Prediction
+                      <i class="fa fa-stethoscope"></i> Launch Prediction
+                    </a>
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Brain Tumor Detection Panel -->
+            <div class="col-sm-3">
+              <div class="panel panel-white no-radius text-center h-100">
+                <div class="panel-body">
+                  <span class="fa-stack fa-2x"> 
+                    <i class="fa fa-square fa-stack-2x text-primary"></i> 
+                    <i class="fa fa-heartbeat fa-stack-1x fa-inverse"></i> 
+                  </span>
+                  <h4 class="StepTitle" style="margin-top: 5%;">Brain Tumor Detection</h4>
+                  <p class="links cl-effect-1">
+                    <a href="https://brain-tumor-detection-master.streamlit.app/" target="_blank">
+                      <i class="fa fa-heartbeat"></i> Launch Detection
                     </a>
                   </p>
                 </div>
@@ -399,7 +448,9 @@ if(isset($_POST['docsub1']))
                 </div>
               </div>
             </div>
+          </div>
 
+          <div class="row justify-content-center align-items-center mt-4">
             <!-- Appointments Panel -->
             <div class="col-sm-3">
               <div class="panel panel-white no-radius text-center h-100">
@@ -408,6 +459,45 @@ if(isset($_POST['docsub1']))
                   <h4 class="StepTitle" style="margin-top: 5%;">Appointments</h4>
                   <p class="links cl-effect-1">
                     <a href="#list-app" onclick="clickDiv('#list-app-list')">View Appointments</a>
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Prescriptions Panel -->
+            <div class="col-sm-3">
+              <div class="panel panel-white no-radius text-center h-100">
+                <div class="panel-body">
+                  <span class="fa-stack fa-2x"> <i class="fa fa-square fa-stack-2x text-primary"></i> <i class="fa fa-file-text fa-stack-1x fa-inverse"></i> </span>
+                  <h4 class="StepTitle" style="margin-top: 5%;">Prescriptions</h4>
+                  <p class="links cl-effect-1">
+                    <a href="#list-pres" onclick="clickDiv('#list-pres-list')">View Prescriptions</a>
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Analytics Panel -->
+            <div class="col-sm-3">
+              <div class="panel panel-white no-radius text-center h-100">
+                <div class="panel-body">
+                  <span class="fa-stack fa-2x"> <i class="fa fa-square fa-stack-2x text-primary"></i> <i class="fa fa-line-chart fa-stack-1x fa-inverse"></i> </span>
+                  <h4 class="StepTitle" style="margin-top: 5%;">Analytics</h4>
+                  <p class="cl-effect-1">
+                    <a href="#list-analytics" onclick="clickDiv('#list-analytics-list')">View Analytics</a>
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Revenue Panel -->
+            <div class="col-sm-3">
+              <div class="panel panel-white no-radius text-center h-100">
+                <div class="panel-body">
+                  <span class="fa-stack fa-2x"> <i class="fa fa-square fa-stack-2x text-primary"></i> <i class="fa fa-money fa-stack-1x fa-inverse"></i> </span>
+                  <h4 class="StepTitle" style="margin-top: 5%;">Revenue</h4>
+                  <p class="cl-effect-1">
+                    <a href="#list-revenue" onclick="clickDiv('#list-revenue-list')">View Revenue</a>
                   </p>
                 </div>
               </div>
@@ -432,6 +522,7 @@ if(isset($_POST['docsub1']))
               flex-direction: column;
               justify-content: center;
               align-items: center;
+              min-height: 240px;
             }
 
             .row {
@@ -448,12 +539,20 @@ if(isset($_POST['docsub1']))
               font-size: 18px;
               font-weight: 500;
               color: #333;
+              text-align: center;
+              min-height: 50px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
             }
 
             .links a {
               color: #3c50c1;
               text-decoration: none;
               transition: color 0.3s ease;
+              display: inline-flex;
+              align-items: center;
+              gap: 8px;
             }
 
             .links a:hover {
@@ -462,12 +561,25 @@ if(isset($_POST['docsub1']))
             }
 
             .fa-stack {
-              margin-bottom: 10px;
+              margin-bottom: 15px;
+            }
+
+            .list-group-item i {
+              margin-right: 10px;
+              width: 20px;
+              text-align: center;
+            }
+
+            .row.justify-content-center {
+              margin-bottom: 30px;
             }
 
             @media (max-width: 768px) {
               .col-sm-3 {
                 width: 50%;
+              }
+              .panel-body {
+                min-height: 200px;
               }
             }
 
@@ -475,51 +587,13 @@ if(isset($_POST['docsub1']))
               .col-sm-3 {
                 width: 100%;
               }
+              .panel-body {
+                min-height: 180px;
+              }
             }
           </style>
 
           <!-- Continue with the rest of your dashboard panels -->
-          <div class="row" style="margin-top: 20px">
-            <!-- Prescriptions Panel -->
-            <div class="col-sm-4">
-              <div class="panel panel-white no-radius text-center">
-                <div class="panel-body">
-                  <span class="fa-stack fa-2x"> <i class="fa fa-square fa-stack-2x text-primary"></i> <i class="fa fa-file-text fa-stack-1x fa-inverse"></i> </span>
-                  <h4 class="StepTitle" style="margin-top: 5%;">Prescriptions</h4>
-                  <p class="links cl-effect-1">
-                    <a href="#list-pres" onclick="clickDiv('#list-pres-list')">View Prescriptions</a>
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <!-- Analytics Panel -->
-            <div class="col-sm-4">
-              <div class="panel panel-white no-radius text-center">
-                <div class="panel-body">
-                  <span class="fa-stack fa-2x"> <i class="fa fa-square fa-stack-2x text-primary"></i> <i class="fa fa-line-chart fa-stack-1x fa-inverse"></i> </span>
-                  <h4 class="StepTitle" style="margin-top: 5%;">Analytics</h4>
-                  <p class="cl-effect-1">
-                    <a href="#list-analytics" onclick="clickDiv('#list-analytics-list')">View Analytics</a>
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <!-- Revenue Panel -->
-            <div class="col-sm-4">
-              <div class="panel panel-white no-radius text-center">
-                <div class="panel-body">
-                  <span class="fa-stack fa-2x"> <i class="fa fa-square fa-stack-2x text-primary"></i> <i class="fa fa-money fa-stack-1x fa-inverse"></i> </span>
-                  <h4 class="StepTitle" style="margin-top: 5%;">Revenue</h4>
-                  <p class="cl-effect-1">
-                    <a href="#list-revenue" onclick="clickDiv('#list-revenue-list')">View Revenue</a>
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-
           <div class="row" style="margin-top: 20px">
             <!-- Patient Statistics Panel -->
             <div class="col-sm-4">
@@ -1520,6 +1594,58 @@ if(isset($_POST['docsub1']))
                     </div>
                 </div>
             </div>
+        </div>
+      </div>
+
+      <div class="tab-pane fade" id="list-brain" role="tabpanel" aria-labelledby="list-brain-list">
+        <div class="card">
+          <div class="card-body">
+            <h4 class="card-title">Brain Tumor Detection System</h4>
+            <p class="card-text">Use our advanced AI-powered system for brain tumor detection and analysis.</p>
+            
+            <div class="row mt-4">
+              <div class="col-md-6">
+                <h5>Key Features:</h5>
+                <ul class="list-unstyled">
+                  <li><i class="fa fa-check-circle text-success"></i> MRI Image Analysis</li>
+                  <li><i class="fa fa-check-circle text-success"></i> Real-time Detection</li>
+                  <li><i class="fa fa-check-circle text-success"></i> High Accuracy Results</li>
+                  <li><i class="fa fa-check-circle text-success"></i> Instant Report Generation</li>
+                </ul>
+              </div>
+              <div class="col-md-6">
+                <h5>Benefits:</h5>
+                <ul class="list-unstyled">
+                  <li><i class="fa fa-arrow-right text-primary"></i> Early Detection</li>
+                  <li><i class="fa fa-arrow-right text-primary"></i> Quick Analysis</li>
+                  <li><i class="fa fa-arrow-right text-primary"></i> Support Clinical Decisions</li>
+                  <li><i class="fa fa-arrow-right text-primary"></i> Improved Patient Care</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="text-center my-4">
+              <a href="https://brain-tumor-detection-master.streamlit.app/" target="_blank" class="btn btn-primary btn-lg">
+                <i class="fa fa-heartbeat"></i> Launch Detection
+              </a>
+            </div>
+
+            <div class="alert alert-info mt-4">
+              <h5><i class="fa fa-info-circle"></i> How to Use:</h5>
+              <ol>
+                <li>Click the button above to open the detection system</li>
+                <li>Upload the patient's MRI scan</li>
+                <li>Wait for the AI analysis</li>
+                <li>Review the detection results</li>
+                <li>Use results to support diagnosis</li>
+              </ol>
+            </div>
+
+            <div class="alert alert-warning">
+              <strong><i class="fa fa-exclamation-triangle"></i> Important Note:</strong>
+              <p class="mb-0">This tool is designed to assist in clinical decision-making but should not replace professional medical judgment. Always combine detection results with proper clinical examination and diagnostic tests.</p>
+            </div>
+          </div>
         </div>
       </div>
 

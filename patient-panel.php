@@ -3,6 +3,7 @@
   <a class="list-group-item list-group-item-action" href="#list-pres" id="list-pres-list" role="tab" data-toggle="list" aria-controls="home">My Prescriptions</a>
   <a class="list-group-item list-group-item-action" href="#list-feedback" id="list-feedback-list" role="tab" data-toggle="list" aria-controls="home">Give Feedback</a>
   <a class="list-group-item list-group-item-action" href="#list-disease-pred" id="list-disease-pred-list" role="tab" data-toggle="list" aria-controls="home">Disease Prediction</a>
+  <a class="list-group-item list-group-item-action" href="#list-brain" id="list-brain-list" role="tab" data-toggle="list" aria-controls="home">Brain Tumor Detection</a>
 
   <div class="tab-pane fade" id="list-feedback" role="tabpanel" aria-labelledby="list-feedback-list">
     <div class="container-fluid">
@@ -164,6 +165,60 @@
                     <div class="alert alert-warning" role="alert">
                         <i class="fa fa-info-circle"></i> Note: This is a preliminary screening tool. Please consult with your doctor for proper medical diagnosis.
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+
+  <div class="tab-pane fade" id="list-brain" role="tabpanel" aria-labelledby="list-brain-list">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Brain Tumor Detection</h4>
+                <p class="card-text">Use our advanced AI-powered system for brain tumor detection and analysis.</p>
+                
+                <div class="row mt-4">
+                    <div class="col-md-6">
+                        <h5>Key Features:</h5>
+                        <ul class="list-unstyled">
+                            <li><i class="fa fa-check-circle text-success"></i> MRI Image Analysis</li>
+                            <li><i class="fa fa-check-circle text-success"></i> Real-time Detection</li>
+                            <li><i class="fa fa-check-circle text-success"></i> High Accuracy Results</li>
+                            <li><i class="fa fa-check-circle text-success"></i> Instant Report Generation</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h5>Benefits:</h5>
+                        <ul class="list-unstyled">
+                            <li><i class="fa fa-arrow-right text-primary"></i> Early Detection</li>
+                            <li><i class="fa fa-arrow-right text-primary"></i> Quick Analysis</li>
+                            <li><i class="fa fa-arrow-right text-primary"></i> Support Clinical Decisions</li>
+                            <li><i class="fa fa-arrow-right text-primary"></i> Improved Patient Care</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="text-center my-4">
+                    <a href="https://brain-tumor-detection-master.streamlit.app/" target="_blank" class="btn btn-primary btn-lg">
+                        <i class="fa fa-heartbeat"></i> Launch Detection System
+                    </a>
+                </div>
+
+                <div class="alert alert-info mt-4">
+                    <h5><i class="fa fa-info-circle"></i> How to Use:</h5>
+                    <ol>
+                        <li>Click the button above to open the detection system</li>
+                        <li>Upload your MRI scan</li>
+                        <li>Wait for the AI analysis</li>
+                        <li>Review the detection results</li>
+                        <li>Share results with your doctor</li>
+                    </ol>
+                </div>
+
+                <div class="alert alert-warning">
+                    <strong><i class="fa fa-exclamation-triangle"></i> Important Note:</strong>
+                    <p class="mb-0">This tool is designed to assist in early detection but should not replace professional medical diagnosis. Always consult with your healthcare provider regarding the results.</p>
                 </div>
             </div>
         </div>

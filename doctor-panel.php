@@ -152,125 +152,88 @@ if(isset($_GET['cancel']))
       <a class="list-group-item list-group-item-action" href="#list-disease-pred" id="list-disease-pred-list" role="tab" data-toggle="list" aria-controls="home">
         <i class="fa fa-heartbeat"></i> Disease Prediction
       </a>
+      <a class="list-group-item list-group-item-action" href="#list-brain" id="list-brain-list" role="tab" data-toggle="list" aria-controls="home">
+        <i class="fa fa-stethoscope"></i> Brain Tumor Detection
+      </a>
     </div><br>
   </div>
   <div class="col-md-8" style="margin-top: 3%;">
     <div class="tab-content" id="nav-tabContent" style="width: 950px;">
       <div class="tab-pane fade show active" id="list-dash" role="tabpanel" aria-labelledby="list-dash-list">
-        
-              <div class="container-fluid container-fullw bg-white" >
-              <div class="row justify-content-center">
-
-               <div class="col-sm-3">
-                  <div class="panel panel-white no-radius text-center">
-                    <div class="panel-body">
-                      <span class="fa-stack fa-2x"> <i class="fa fa-square fa-stack-2x text-primary"></i> <i class="fa fa-calendar fa-stack-1x fa-inverse"></i> </span>
-                      <h4 class="StepTitle" style="margin-top: 5%;"> View Appointments</h4>                      
-                      <p class="links cl-effect-1">
-                        <a href="#list-app" onclick="clickDiv('#list-app-list')">
-                          <i class="fa fa-calendar"></i> Appointment List
-                        </a>
-                      </p>
-                    </div>
-                  </div>
+        <div class="container-fluid container-fullw bg-white">
+          <div class="row justify-content-center">
+            <div class="col-sm-3">
+              <div class="panel panel-white no-radius text-center h-100">
+                <div class="panel-body">
+                  <span class="fa-stack fa-2x"> <i class="fa fa-square fa-stack-2x text-primary"></i> <i class="fa fa-calendar fa-stack-1x fa-inverse"></i> </span>
+                  <h4 class="StepTitle" style="margin-top: 5%;">View Appointments</h4>
+                  <p class="links cl-effect-1">
+                    <a href="#list-app" onclick="clickDiv('#list-app')">
+                      <i class="fa fa-calendar"></i> Appointment List
+                    </a>
+                  </p>
                 </div>
+              </div>
+            </div>
 
-                <div class="col-sm-3">
-                  <div class="panel panel-white no-radius text-center">
-                    <div class="panel-body">
-                      <span class="fa-stack fa-2x"> <i class="fa fa-square fa-stack-2x text-primary"></i> <i class="fa fa-list-alt fa-stack-1x fa-inverse"></i> </span>
-                      <h4 class="StepTitle" style="margin-top: 5%;"> Prescriptions</h4>
-                      <p class="links cl-effect-1">
-                        <a href="#list-pres" onclick="clickDiv('#list-pres-list')">
-                          <i class="fa fa-list-alt"></i> Prescription List
-                        </a>
-                      </p>
-                    </div>
-                  </div>
-                </div>    
-
-                <div class="col-sm-3">
-                  <div class="panel panel-white no-radius text-center">
-                    <div class="panel-body">
-                      <span class="fa-stack fa-2x"> <i class="fa fa-square fa-stack-2x text-primary"></i> <i class="fa fa-file-text fa-stack-1x fa-inverse"></i> </span>
-                      <h4 class="StepTitle" style="margin-top: 5%;"> Documents</h4>
-                      <p class="links cl-effect-1">
-                        <a href="#list-docs" onclick="clickDiv('#list-docs-list')">
-                          <i class="fa fa-file-text"></i> Patient Documents
-                        </a>
-                      </p>
-                    </div>
-                  </div>
+            <div class="col-sm-3">
+              <div class="panel panel-white no-radius text-center h-100">
+                <div class="panel-body">
+                  <span class="fa-stack fa-2x"> <i class="fa fa-square fa-stack-2x text-primary"></i> <i class="fa fa-list-alt fa-stack-1x fa-inverse"></i> </span>
+                  <h4 class="StepTitle" style="margin-top: 5%;">Prescriptions</h4>
+                  <p class="links cl-effect-1">
+                    <a href="#list-pres" onclick="clickDiv('#list-pres')">
+                      <i class="fa fa-list-alt"></i> Prescription List
+                    </a>
+                  </p>
                 </div>
+              </div>
+            </div>
 
-                <div class="col-sm-3">
-                  <div class="panel panel-white no-radius text-center">
-                    <div class="panel-body">
-                      <span class="fa-stack fa-2x"> <i class="fa fa-square fa-stack-2x text-primary"></i> <i class="fa fa-heartbeat fa-stack-1x fa-inverse"></i> </span>
-                      <h4 class="StepTitle" style="margin-top: 5%;"> Disease Prediction</h4>
-                      <p class="links cl-effect-1">
-                        <a href="#list-disease-pred" onclick="clickDiv('#list-disease-pred-list')">
-                          <i class="fa fa-heartbeat"></i> Predict Disease
-                        </a>
-                      </p>
-                    </div>
-                  </div>
+            <div class="col-sm-3">
+              <div class="panel panel-white no-radius text-center h-100">
+                <div class="panel-body">
+                  <span class="fa-stack fa-2x"> <i class="fa fa-square fa-stack-2x text-primary"></i> <i class="fa fa-file-text fa-stack-1x fa-inverse"></i> </span>
+                  <h4 class="StepTitle" style="margin-top: 5%;">Documents</h4>
+                  <p class="links cl-effect-1">
+                    <a href="#list-docs" onclick="clickDiv('#list-docs')">
+                      <i class="fa fa-file-text"></i> Patient Documents
+                    </a>
+                  </p>
                 </div>
+              </div>
+            </div>
 
-             </div>
+            <div class="col-sm-3">
+              <div class="panel panel-white no-radius text-center h-100">
+                <div class="panel-body">
+                  <span class="fa-stack fa-2x"> <i class="fa fa-square fa-stack-2x text-primary"></i> <i class="fa fa-heartbeat fa-stack-1x fa-inverse"></i> </span>
+                  <h4 class="StepTitle" style="margin-top: 5%;">Disease Prediction</h4>
+                  <p class="links cl-effect-1">
+                    <a href="#list-disease-pred" onclick="clickDiv('#list-disease-pred')">
+                      <i class="fa fa-heartbeat"></i> Predict Disease
+                    </a>
+                  </p>
+                </div>
+              </div>
+            </div>
 
-             <style>
-              .panel-body {
-                padding: 20px;
-                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-                border-radius: 8px;
-                transition: transform 0.3s ease;
-                height: 100%;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-              }
-              
-              .panel-body:hover {
-                transform: translateY(-5px);
-                box-shadow: 0 6px 12px rgba(0,0,0,0.15);
-              }
-
-              .StepTitle {
-                color: #3931af;
-                font-weight: 500;
-                font-size: 1.2rem;
-                margin: 15px 0;
-              }
-
-              .fa-stack {
-                margin-bottom: 10px;
-              }
-
-              .links a {
-                color: #3931af;
-                text-decoration: none;
-                font-weight: 500;
-                transition: color 0.3s ease;
-              }
-
-              .links a:hover {
-                color: #00c6ff;
-              }
-
-              .row.justify-content-center {
-                margin: 20px -15px;
-              }
-
-              .col-sm-3 {
-                padding: 15px;
-              }
-             </style>
-           </div>
-         </div>
-    
-
+            <div class="col-sm-3">
+              <div class="panel panel-white no-radius text-center h-100">
+                <div class="panel-body">
+                  <span class="fa-stack fa-2x"> <i class="fa fa-square fa-stack-2x text-primary"></i> <i class="fa fa-stethoscope fa-stack-1x fa-inverse"></i> </span>
+                  <h4 class="StepTitle" style="margin-top: 5%;">Brain Tumor Detection</h4>
+                  <p class="links cl-effect-1">
+                    <a href="#list-brain" onclick="clickDiv('#list-brain')">
+                      <i class="fa fa-stethoscope"></i> Launch Detection
+                    </a>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     <div class="tab-pane fade" id="list-app" role="tabpanel" aria-labelledby="list-app-list">
         
               <table class="table table-hover">
@@ -537,6 +500,60 @@ if(isset($_GET['cancel']))
             </div>
         </div>
       </div>
+
+      <div class="tab-pane fade" id="list-brain" role="tabpanel" aria-labelledby="list-brain-list">
+        <div class="container-fluid">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Brain Tumor Detection System</h4>
+                    <p class="card-text">Use our advanced AI-powered system for brain tumor detection and analysis.</p>
+                    
+                    <div class="row mt-4">
+                        <div class="col-md-6">
+                            <h5>Key Features:</h5>
+                            <ul class="list-unstyled">
+                                <li><i class="fa fa-check-circle text-success"></i> MRI Image Analysis</li>
+                                <li><i class="fa fa-check-circle text-success"></i> Real-time Detection</li>
+                                <li><i class="fa fa-check-circle text-success"></i> High Accuracy Results</li>
+                                <li><i class="fa fa-check-circle text-success"></i> Instant Report Generation</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h5>Benefits:</h5>
+                            <ul class="list-unstyled">
+                                <li><i class="fa fa-arrow-right text-primary"></i> Early Detection</li>
+                                <li><i class="fa fa-arrow-right text-primary"></i> Quick Analysis</li>
+                                <li><i class="fa fa-arrow-right text-primary"></i> Support Clinical Decisions</li>
+                                <li><i class="fa fa-arrow-right text-primary"></i> Improved Patient Care</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="text-center my-4">
+                        <a href="https://brain-tumor-detection-master.streamlit.app/" target="_blank" class="btn btn-primary btn-lg">
+                            <i class="fa fa-stethoscope"></i> Launch Brain Tumor Detection Tool
+                        </a>
+                    </div>
+
+                    <div class="alert alert-info mt-4">
+                        <h5><i class="fa fa-info-circle"></i> How to Use:</h5>
+                        <ol>
+                            <li>Click the button above to open the detection system</li>
+                            <li>Upload the patient's MRI scan</li>
+                            <li>Wait for the AI analysis</li>
+                            <li>Review the detection results</li>
+                            <li>Use results to support diagnosis</li>
+                        </ol>
+                    </div>
+
+                    <div class="alert alert-warning">
+                        <strong><i class="fa fa-exclamation-triangle"></i> Professional Note:</strong>
+                        <p class="mb-0">This tool is designed to assist in clinical decision-making but should not replace professional medical judgment. Always combine detection results with proper clinical examination and diagnostic tests.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -701,8 +718,8 @@ if(isset($_GET['cancel']))
 
     <script>
     function clickDiv(id) {
-      // Remove the -list suffix if present
-      const baseId = id.replace('-list', '');
+      // Remove the '#' if present
+      const baseId = id.replace('#', '');
       
       // Remove active class from all tabs
       document.querySelectorAll('.list-group-item').forEach(item => {
@@ -725,9 +742,6 @@ if(isset($_GET['cancel']))
         if (tab) {
           tab.classList.add('active');
         }
-        
-        // Scroll to the section
-        targetPane.scrollIntoView({ behavior: 'smooth' });
       }
     }
 
@@ -743,11 +757,13 @@ if(isset($_GET['cancel']))
       });
       
       // Handle tab switching from dashboard links
-      document.querySelectorAll('.panel-body a[onclick]').forEach(link => {
+      document.querySelectorAll('.panel-body a').forEach(link => {
         link.addEventListener('click', function(e) {
-          e.preventDefault();
-          const targetId = this.getAttribute('onclick').match(/'([^']+)'/)[1];
-          clickDiv(targetId);
+          if (this.getAttribute('onclick')) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href');
+            clickDiv(targetId);
+          }
         });
       });
     });

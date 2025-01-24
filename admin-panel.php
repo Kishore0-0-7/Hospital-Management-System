@@ -450,7 +450,12 @@ function get_specs(){
       <a class="list-group-item list-group-item-action" id="list-health-list" data-toggle="list" href="#list-health" role="tab" aria-controls="home">Health Details</a>
       <a class="list-group-item list-group-item-action" id="list-analytics-list" data-toggle="list" href="#list-analytics" role="tab" aria-controls="home">Analytics</a>
       <a class="list-group-item list-group-item-action" id="list-docs-list" data-toggle="list" href="#list-docs" role="tab" aria-controls="home">Documents</a>
-      <a class="list-group-item list-group-item-action" id="list-predict-list" data-toggle="list" href="#list-predict" role="tab">Disease Prediction</a>
+      <a class="list-group-item list-group-item-action" href="#list-disease-pred" id="list-disease-pred-list" role="tab" data-toggle="list">
+        <i class="fa fa-stethoscope"></i> Disease Prediction
+      </a>
+      <a class="list-group-item list-group-item-action" href="#list-brain" id="list-brain-list" role="tab" data-toggle="list">
+        <i class="fa fa-heartbeat"></i> Brain Tumor Detection
+      </a>
     </div><br>
   </div>
   <div class="col-md-8" style="margin-top: 3%;">
@@ -870,8 +875,8 @@ function get_specs(){
                   <h4 class="StepTitle" style="margin-top: 5%;">AI Health Check</h4>
                   <p class="text-muted">Multiple Disease Prediction System</p>
                   <p class="links cl-effect-1">
-                    <a href="https://multiple-disease-prediction-hms.streamlit.app/" target="_blank">
-                      Check Your Health Now
+                    <a href="#list-disease-pred" onclick="clickDiv('#list-disease-pred-list')">
+                      <i class="fa fa-stethoscope"></i> Check Your Health Now
                     </a>
                   </p>
                   <div class="small mt-2">
@@ -881,6 +886,34 @@ function get_specs(){
                       <li><i class="fa fa-check-circle text-success"></i> Heart Disease</li>
                       <li><i class="fa fa-check-circle text-success"></i> Liver Disease</li>
                       <li><i class="fa fa-check-circle text-success"></i> And more...</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Brain Tumor Detection Panel -->
+            <div class="col-sm-4 mb-4">
+              <div class="panel panel-white no-radius text-center shadow-sm">
+                <div class="panel-body">
+                  <span class="fa-stack fa-2x"> 
+                    <i class="fa fa-square fa-stack-2x text-primary"></i> 
+                    <i class="fa fa-stethoscope fa-stack-1x fa-inverse"></i> 
+                  </span>
+                  <h4 class="StepTitle" style="margin-top: 5%;">Brain Tumor Detection</h4>
+                  <p class="text-muted">AI-Powered MRI Analysis</p>
+                  <p class="links cl-effect-1">
+                    <a href="#list-brain" onclick="clickDiv('#list-brain-list')">
+                      <i class="fa fa-stethoscope"></i> Launch Detection System
+                    </a>
+                  </p>
+                  <div class="small mt-2">
+                    <span class="text-muted">Key Features:</span>
+                    <ul class="list-unstyled mt-2">
+                      <li><i class="fa fa-check-circle text-success"></i> MRI Image Analysis</li>
+                      <li><i class="fa fa-check-circle text-success"></i> Real-time Detection</li>
+                      <li><i class="fa fa-check-circle text-success"></i> High Accuracy Results</li>
+                      <li><i class="fa fa-check-circle text-success"></i> Instant Reports</li>
                     </ul>
                   </div>
                 </div>
@@ -1450,6 +1483,92 @@ function get_specs(){
     </div>
   </div>
 </div>
+
+      <div class="tab-pane fade" id="list-disease-pred" role="tabpanel" aria-labelledby="list-disease-pred-list">
+        <div class="container-fluid">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Multiple Disease Prediction System</h4>
+                    <p class="card-text">Use our advanced AI-powered system to assist in early disease detection and patient screening.</p>
+                    
+                    <div class="row mt-4">
+                        <div class="col-md-6">
+                            <h5>Available Disease Predictions:</h5>
+                            <ul class="list-unstyled">
+                                <li><i class="fa fa-check-circle text-success"></i> Diabetes</li>
+                                <li><i class="fa fa-check-circle text-success"></i> Heart Disease</li>
+                                <li><i class="fa fa-check-circle text-success"></i> Parkinson's Disease</li>
+                                <li><i class="fa fa-check-circle text-success"></i> Liver Disease</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h5>Key Features:</h5>
+                            <ul class="list-unstyled">
+                                <li><i class="fa fa-arrow-right text-primary"></i> Symptom-based analysis</li>
+                                <li><i class="fa fa-arrow-right text-primary"></i> Medical history integration</li>
+                                <li><i class="fa fa-arrow-right text-primary"></i> Lab results interpretation</li>
+                                <li><i class="fa fa-arrow-right text-primary"></i> Risk factor assessment</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="text-center my-4">
+                        <a href="https://multiple-disease-prediction-hms.streamlit.app/" target="_blank" class="btn btn-primary btn-lg">
+                            <i class="fa fa-stethoscope"></i> Launch Disease Prediction Tool
+                        </a>
+                    </div>
+
+                    <div class="alert alert-warning">
+                        <strong><i class="fa fa-exclamation-triangle"></i> Important Note:</strong>
+                        <p class="mb-0">This tool is designed to assist in clinical decision-making but should not replace professional medical judgment.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+
+      <div class="tab-pane fade" id="list-brain" role="tabpanel" aria-labelledby="list-brain-list">
+        <div class="container-fluid">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Brain Tumor Detection System</h4>
+                    <p class="card-text">Use our advanced AI-powered system for brain tumor detection and analysis.</p>
+                    
+                    <div class="row mt-4">
+                        <div class="col-md-6">
+                            <h5>Key Features:</h5>
+                            <ul class="list-unstyled">
+                                <li><i class="fa fa-check-circle text-success"></i> MRI Image Analysis</li>
+                                <li><i class="fa fa-check-circle text-success"></i> Real-time Detection</li>
+                                <li><i class="fa fa-check-circle text-success"></i> High Accuracy Results</li>
+                                <li><i class="fa fa-check-circle text-success"></i> Instant Report Generation</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h5>Benefits:</h5>
+                            <ul class="list-unstyled">
+                                <li><i class="fa fa-arrow-right text-primary"></i> Early Detection</li>
+                                <li><i class="fa fa-arrow-right text-primary"></i> Quick Analysis</li>
+                                <li><i class="fa fa-arrow-right text-primary"></i> Support Clinical Decisions</li>
+                                <li><i class="fa fa-arrow-right text-primary"></i> Improved Patient Care</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="text-center my-4">
+                        <a href="https://brain-tumor-detection-master.streamlit.app/" target="_blank" class="btn btn-primary btn-lg">
+                            <i class="fa fa-stethoscope"></i> Launch Brain Tumor Detection Tool
+                        </a>
+                    </div>
+
+                    <div class="alert alert-warning">
+                        <strong><i class="fa fa-exclamation-triangle"></i> Important Note:</strong>
+                        <p class="mb-0">This tool is designed to assist in clinical decision-making but should not replace professional medical judgment.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
