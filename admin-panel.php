@@ -4,18 +4,9 @@ include('func.php');
 include('newfunc.php');
 $con=mysqli_connect("localhost","root","","myhmsdb");
 
-
-  $pid = $_SESSION['pid'];
-  $username = $_SESSION['username'];
-  $email = $_SESSION['email'];
-  $fname = $_SESSION['fname'];
-  $gender = $_SESSION['gender'];
-  $lname = $_SESSION['lname'];
-  $contact = $_SESSION['contact'];
-
-
-
-if(isset($_POST['app-submit'])) {
+// Add this near the top of the file where other includes are
+if(isset($_POST['app-submit']))
+{
   $pid = $_SESSION['pid'];
   $username = $_SESSION['username'];
   $email = $_SESSION['email'];
@@ -23,154 +14,225 @@ if(isset($_POST['app-submit'])) {
   $lname = $_SESSION['lname'];
   $gender = $_SESSION['gender'];
   $contact = $_SESSION['contact'];
-  $doctor = mysqli_real_escape_string($con, $_POST['doctor']);
-  $docFees = mysqli_real_escape_string($con, $_POST['docFees']);
-  $appdate = mysqli_real_escape_string($con, $_POST['appdate']);
-  $apptime = mysqli_real_escape_string($con, $_POST['apptime']);
-
-  // Validate that the appointment time is in the future
-  $cur_date = date("Y-m-d");
-  $cur_time = date("H:i:s");
+  $doctor = $_POST['doctor'];
+  $docFees = $_POST['docFees'];
+  $appdate = $_POST['appdate'];
+  $apptime = $_POST['apptime'];
   
-  if($appdate >= $cur_date) {
-    // Check if slot is already booked
-    $check_query = mysqli_query($con, "SELECT * FROM appointmenttb 
-                                     WHERE doctor='$doctor' 
-                                     AND appdate='$appdate' 
-                                     AND apptime='$apptime'
-                                     AND userStatus=1 
-                                     AND doctorStatus=1
-                                     AND (status IS NULL OR status != 'completed')");
-    
-    if(mysqli_num_rows($check_query) == 0) {
-      $query = mysqli_query($con, "INSERT INTO appointmenttb 
-                                 (pid, fname, lname, gender, email, contact, doctor, docFees, appdate, apptime, userStatus, doctorStatus) 
-                                 VALUES ($pid, '$fname', '$lname', '$gender', '$email', '$contact', '$doctor', '$docFees', '$appdate', '$apptime', 1, 1)");
-      
-      if($query) {
-        echo "<script>
-          alert('Your appointment is successfully booked!');
-          window.location.href = 'admin-panel.php#app-hist';
-        </script>";
+  $query = mysqli_query($con,"insert into appointmenttb(pid,fname,lname,gender,email,contact,doctor,docFees,appdate,apptime,userStatus,doctorStatus) values($pid,'$fname','$lname','$gender','$email','$contact','$doctor','$docFees','$appdate','$apptime','1','1')");
+
+  if($query)
+  {
+    echo "<script>alert('Your appointment successfully booked');</script>";
+  }
+  else{
+    echo "<script>alert('Unable to process your request. Please try again!');</script>";
+  }
+}
+
+  $pid = $_SESSION['pid'];
+  $username = $_SESSION['username'];
+  $email = $_SESSION['email'];
+  $fname = $_SESSION['fname'];
+  $gender = $_SESSION['gender'];
+  $lname = $_SESSION['lname'];
+  $contact = $_SESSION['contact'];
+
+
+if(isset($_POST['app-submit']))
+{
+  $pid = $_SESSION['pid'];
+  $username = $_SESSION['username'];
+  $email = $_SESSION['email'];
+  $fname = $_SESSION['fname'];
+  $lname = $_SESSION['lname'];
+  $gender = $_SESSION['gender'];
+  $contact = $_SESSION['contact'];
+  $doctor=$_POST['doctor'];
+  $email=$_SESSION['email'];
+  $docFees=$_POST['docFees'];
+
+  $appdate=$_POST['appdate'];
+  $apptime=$_POST['apptime'];
+  $cur_date = date("Y-m-d");
+  date_default_timezone_set('Asia/Kolkata');
+  $cur_time = date("H:i:s");
+  $apptime1 = strtotime($apptime);
+  $appdate1 = strtotime($appdate);
+	
+  if(date("Y-m-d",$appdate1)>=$cur_date){
+    if((date("Y-m-d",$appdate1)==$cur_date and date("H:i:s",$apptime1)>$cur_time) or date("Y-m-d",$appdate1)>$cur_date) {
+      $check_query = mysqli_query($con,"select apptime from appointmenttb where doctor='$doctor' and appdate='$appdate' and apptime='$apptime'");
+
+        if(mysqli_num_rows($check_query)==0){
+          $query = mysqli_query($con, sprintf(
+            "INSERT INTO appointmenttb (pid, fname, lname, gender, email, contact, doctor, docFees, appdate, apptime, userStatus, doctorStatus) 
+             VALUES (%d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', 1, 1)",
+            mysqli_real_escape_string($con, $pid),
+            mysqli_real_escape_string($con, $fname),
+            mysqli_real_escape_string($con, $lname),
+            mysqli_real_escape_string($con, $gender),
+            mysqli_real_escape_string($con, $email),
+            mysqli_real_escape_string($con, $contact),
+            mysqli_real_escape_string($con, $doctor),
+            mysqli_real_escape_string($con, $docFees),
+            mysqli_real_escape_string($con, $appdate),
+            mysqli_real_escape_string($con, $apptime)
+        ));
+        
+        if($query) {
+            echo "<script>
+                alert('Your appointment successfully booked');
+                window.location.href = window.location.href;
+            </script>";
+            exit();
+        } else {
+            echo "<script>
+                alert('Unable to process your request. Please try again!');
+                window.location.href = window.location.href;
+            </script>";
+            exit();
+        }
       } else {
         echo "<script>
-          alert('Unable to process appointment: " . mysqli_error($con) . "');
-          window.location.href = 'admin-panel.php#list-home';
+            alert('We are sorry to inform that the doctor is not available in this time or date. Please choose different time or date!');
+            window.history.back();
         </script>";
+        exit();
       }
     } else {
       echo "<script>
-        alert('This slot is already booked! Please select a different time.');
-        window.location.href = 'admin-panel.php#list-home';
+          alert('Select a time or date in the future!');
+          window.history.back();
       </script>";
+      exit();
     }
   } else {
     echo "<script>
-      alert('Select a future date for appointment!');
-      window.location.href = 'admin-panel.php#list-home';
+        alert('Select a time or date in the future!');
+        window.history.back();
     </script>";
+    exit();
   }
 }
 
-if(isset($_GET['cancel'])) {
-  $query = mysqli_query($con, "UPDATE appointmenttb SET userStatus='0' WHERE ID = '".$_GET['ID']."'");
-  if($query) {
-    echo "<script>
-      alert('Your appointment successfully cancelled!');
-      window.location.href = 'admin-panel.php#app-hist';
-    </script>";
-  } else {
-    echo "<script>alert('Error cancelling appointment: " . mysqli_error($con) . "');</script>";
+if(isset($_GET['cancel']))
+  {
+    $query=mysqli_query($con,"update appointmenttb set userStatus='0' where ID = '".$_GET['ID']."'");
+    if($query)
+    {
+      echo "<script>alert('Your appointment successfully cancelled');</script>";
+    }
   }
-}
 
 if(isset($_GET['complete']))
 {
   $query=mysqli_query($con,"UPDATE appointmenttb SET status='completed' WHERE ID = '".$_GET['ID']."'");
   if($query)
   {
-    echo "<script>
-      alert('Appointment marked as completed successfully!');
-      window.location.href = 'admin-panel.php#app-hist';
-    </script>";
-  } else {
-    echo "<script>alert('Error updating appointment status: " . mysqli_error($con) . "');</script>";
+    echo "<script>alert('Appointment marked as completed');</script>";
   }
 }
 
-
-
-
-function generate_bill(){
-  $con=mysqli_connect("localhost","root","","myhmsdb");
-  $pid = $_SESSION['pid'];
-  $output='';
-  $query=mysqli_query($con,"select p.pid,p.ID,p.fname,p.lname,p.doctor,p.appdate,p.apptime,p.disease,p.allergy,p.prescription,a.docFees from prestb p inner join appointmenttb a on p.ID=a.ID and p.pid = '$pid' and p.ID = '".$_GET['ID']."'");
-  while($row = mysqli_fetch_array($query)){
-    $output .= '
-    <label> Patient ID : </label>'.$row["pid"].'<br/><br/>
-    <label> Appointment ID : </label>'.$row["ID"].'<br/><br/>
-    <label> Patient Name : </label>'.$row["fname"].' '.$row["lname"].'<br/><br/>
-    <label> Doctor Name : </label>'.$row["doctor"].'<br/><br/>
-    <label> Appointment Date : </label>'.$row["appdate"].'<br/><br/>
-    <label> Appointment Time : </label>'.$row["apptime"].'<br/><br/>
-    <label> Disease : </label>'.$row["disease"].'<br/><br/>
-    <label> Allergies : </label>'.$row["allergy"].'<br/><br/>
-    <label> Prescription : </label>'.$row["prescription"].'<br/><br/>
-    <label> Fees Paid : </label>'.$row["docFees"].'<br/>
+  // Add this function to show available slots
+  function getAvailableSlots($doctor, $date) {
+    global $con;
     
+    $slots = array(
+      "09:00:00" => true, "09:30:00" => true, "10:00:00" => true,
+      "10:30:00" => true, "11:00:00" => true, "11:30:00" => true,
+      "12:00:00" => true, "12:30:00" => true, "13:00:00" => true,
+      "13:30:00" => true, "14:00:00" => true, "14:30:00" => true,
+      "15:00:00" => true, "15:30:00" => true, "16:00:00" => true,
+      "16:30:00" => true, "17:00:00" => true, "17:30:00" => true
+    );
+
+    // Get booked slots
+    $query = mysqli_query($con, 
+      "SELECT apptime FROM appointmenttb 
+      WHERE doctor='$doctor' 
+      AND appdate='$date' 
+      AND (userStatus='1' OR doctorStatus='1')");
+
+    while($row = mysqli_fetch_array($query)) {
+      if(isset($slots[$row['apptime']])) {
+        $slots[$row['apptime']] = false;
+      }
+    }
+
+    return $slots;
+  }
+
+  function generate_bill(){
+    $con=mysqli_connect("localhost","root","","myhmsdb");
+    $pid = $_SESSION['pid'];
+    $output='';
+    $query=mysqli_query($con,"select p.pid,p.ID,p.fname,p.lname,p.doctor,p.appdate,p.apptime,p.disease,p.allergy,p.prescription,a.docFees from prestb p inner join appointmenttb a on p.ID=a.ID and p.pid = '$pid' and p.ID = '".$_GET['ID']."'");
+    while($row = mysqli_fetch_array($query)){
+      $output .= '
+      <label> Patient ID : </label>'.$row["pid"].'<br/><br/>
+      <label> Appointment ID : </label>'.$row["ID"].'<br/><br/>
+      <label> Patient Name : </label>'.$row["fname"].' '.$row["lname"].'<br/><br/>
+      <label> Doctor Name : </label>'.$row["doctor"].'<br/><br/>
+      <label> Appointment Date : </label>'.$row["appdate"].'<br/><br/>
+      <label> Appointment Time : </label>'.$row["apptime"].'<br/><br/>
+      <label> Disease : </label>'.$row["disease"].'<br/><br/>
+      <label> Allergies : </label>'.$row["allergy"].'<br/><br/>
+      <label> Prescription : </label>'.$row["prescription"].'<br/><br/>
+      <label> Fees Paid : </label>'.$row["docFees"].'<br/>
+      
+      ';
+
+    }
+    
+    return $output;
+  }
+
+
+  if(isset($_GET["generate_bill"])){
+    require_once("TCPDF/tcpdf.php");
+    $obj_pdf = new TCPDF('P',PDF_UNIT,PDF_PAGE_FORMAT,true,'UTF-8',false);
+    $obj_pdf -> SetCreator(PDF_CREATOR);
+    $obj_pdf -> SetTitle("Generate Bill");
+    $obj_pdf -> SetHeaderData('','',PDF_HEADER_TITLE,PDF_HEADER_STRING);
+    $obj_pdf -> SetHeaderFont(Array(PDF_FONT_NAME_MAIN,'',PDF_FONT_SIZE_MAIN));
+    $obj_pdf -> SetFooterFont(Array(PDF_FONT_NAME_MAIN,'',PDF_FONT_SIZE_MAIN));
+    $obj_pdf -> SetDefaultMonospacedFont('helvetica');
+    $obj_pdf -> SetFooterMargin(PDF_MARGIN_FOOTER);
+    $obj_pdf -> SetMargins(PDF_MARGIN_LEFT,'5',PDF_MARGIN_RIGHT);
+    $obj_pdf -> SetPrintHeader(false);
+    $obj_pdf -> SetPrintFooter(false);
+    $obj_pdf -> SetAutoPageBreak(TRUE, 10);
+    $obj_pdf -> SetFont('helvetica','',12);
+    $obj_pdf -> AddPage();
+
+    $content = '';
+
+    $content .= '
+        <br/>
+        <h2 align ="center">The Care Crew</h2></br>
+        <h3 align ="center"> Bill</h3>
+        
+
     ';
+  
+    $content .= generate_bill();
+    $obj_pdf -> writeHTML($content);
+    ob_end_clean();
+    $obj_pdf -> Output("bill.pdf",'I');
 
   }
-  
-  return $output;
-}
 
-
-if(isset($_GET["generate_bill"])){
-  require_once("TCPDF/tcpdf.php");
-  $obj_pdf = new TCPDF('P',PDF_UNIT,PDF_PAGE_FORMAT,true,'UTF-8',false);
-  $obj_pdf -> SetCreator(PDF_CREATOR);
-  $obj_pdf -> SetTitle("Generate Bill");
-  $obj_pdf -> SetHeaderData('','',PDF_HEADER_TITLE,PDF_HEADER_STRING);
-  $obj_pdf -> SetHeaderFont(Array(PDF_FONT_NAME_MAIN,'',PDF_FONT_SIZE_MAIN));
-  $obj_pdf -> SetFooterFont(Array(PDF_FONT_NAME_MAIN,'',PDF_FONT_SIZE_MAIN));
-  $obj_pdf -> SetDefaultMonospacedFont('helvetica');
-  $obj_pdf -> SetFooterMargin(PDF_MARGIN_FOOTER);
-  $obj_pdf -> SetMargins(PDF_MARGIN_LEFT,'5',PDF_MARGIN_RIGHT);
-  $obj_pdf -> SetPrintHeader(false);
-  $obj_pdf -> SetPrintFooter(false);
-  $obj_pdf -> SetAutoPageBreak(TRUE, 10);
-  $obj_pdf -> SetFont('helvetica','',12);
-  $obj_pdf -> AddPage();
-
-  $content = '';
-
-  $content .= '
-      <br/>
-      <h2 align ="center">The Care Crew</h2></br>
-      <h3 align ="center"> Bill</h3>
-      
-
-  ';
- 
-  $content .= generate_bill();
-  $obj_pdf -> writeHTML($content);
-  ob_end_clean();
-  $obj_pdf -> Output("bill.pdf",'I');
-
-}
-
-function get_specs(){
-  $con=mysqli_connect("localhost","root","","myhmsdb");
-  $query=mysqli_query($con,"select username,spec from doctb");
-  $docarray = array();
-    while($row =mysqli_fetch_assoc($query))
-    {
-        $docarray[] = $row;
-    }
-    return json_encode($docarray);
-}
+  function get_specs(){
+    $con=mysqli_connect("localhost","root","","myhmsdb");
+    $query=mysqli_query($con,"select username,spec from doctb");
+    $docarray = array();
+      while($row =mysqli_fetch_assoc($query))
+      {
+          $docarray[] = $row;
+      }
+      return json_encode($docarray);
+  }
 
 ?>
 <html lang="en">
@@ -438,12 +500,7 @@ function get_specs(){
       <a class="list-group-item list-group-item-action" id="list-health-list" data-toggle="list" href="#list-health" role="tab" aria-controls="home">Health Details</a>
       <a class="list-group-item list-group-item-action" id="list-analytics-list" data-toggle="list" href="#list-analytics" role="tab" aria-controls="home">Analytics</a>
       <a class="list-group-item list-group-item-action" id="list-docs-list" data-toggle="list" href="#list-docs" role="tab" aria-controls="home">Documents</a>
-      <a class="list-group-item list-group-item-action" href="#list-disease-pred" id="list-disease-pred-list" role="tab" data-toggle="list">
-        <i class="fa fa-stethoscope"></i> Disease Prediction
-      </a>
-      <a class="list-group-item list-group-item-action" href="#list-brain" id="list-brain-list" role="tab" data-toggle="list">
-        <i class="fa fa-heartbeat"></i> Brain Tumor Detection
-      </a>
+      <a class="list-group-item list-group-item-action" id="list-predict-list" data-toggle="list" href="#list-predict" role="tab">Disease Prediction</a>
     </div><br>
   </div>
   <div class="col-md-8" style="margin-top: 3%;">
@@ -863,21 +920,47 @@ function get_specs(){
                   <h4 class="StepTitle" style="margin-top: 5%;">AI Health Check</h4>
                   <p class="text-muted">Multiple Disease Prediction System</p>
                   <p class="links cl-effect-1">
-                    <a href="#list-disease-pred" onclick="clickDiv('#list-disease-pred-list')">
-                      <i class="fa fa-stethoscope"></i> Check Your Health Now
+                    <a href="https://multiple-disease-prediction-hms.streamlit.app/" target="_blank">
+                      Check Your Health Now
                     </a>
                   </p>
                   <div class="small mt-2">
                     <span class="text-muted">Analyze your risk for multiple conditions:</span>
                     <ul class="list-unstyled mt-2">
-                      <li><i class="fa fa-check-circle text-success"></i> Diabetes</li>
-                      <li><i class="fa fa-check-circle text-success"></i> Heart Disease</li>
-                      <li><i class="fa fa-check-circle text-success"></i> Liver Disease</li>
-                      <li><i class="fa fa-check-circle text-success"></i> And more...</li>
+                        <li><i class="fa fa-check-circle text-success"></i> Diabetes</li>
+                        <li><i class="fa fa-check-circle text-success"></i> Heart Disease</li>
+                        <li><i class="fa fa-check-circle text-success"></i> Liver Disease</li>
+                        <li><i class="fa fa-check-circle text-success"></i> And more...</li>
                     </ul>
                   </div>
                 </div>
               </div>
+            </div>
+
+            <!-- Brain Tumor Detection Panel -->
+            <div class="col-sm-4 mb-4">
+                <div class="panel panel-white no-radius text-center shadow-sm">
+                    <div class="panel-body">
+                        <span class="fa-stack fa-2x"> 
+                            <i class="fa fa-square fa-stack-2x text-primary"></i> 
+                            <i class="fa fa-heartbeat fa-stack-1x fa-inverse"></i> 
+                        </span>
+                        <h4 class="StepTitle" style="margin-top: 5%;">Brain Tumor Detection</h4>
+                        <p class="text-muted">AI-Powered MRI Analysis</p>
+                        <p class="links cl-effect-1">
+                            <a href="#list-brain" onclick="clickDiv('#list-brain-list')">
+                                Launch Detection System
+                            </a>
+                        </p>
+                        <div class="small mt-2">
+                            <ul class="list-unstyled mt-2">
+                                <li><i class="fa fa-check-circle text-success"></i> MRI Analysis</li>
+                                <li><i class="fa fa-check-circle text-success"></i> Real-time Results</li>
+                                <li><i class="fa fa-check-circle text-success"></i> High Accuracy</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- Brain Tumor Detection Panel -->
@@ -912,63 +995,39 @@ function get_specs(){
         </div>
       </div>
 
-      <div class="tab-pane fade" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
+<div class="tab-pane fade" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
         <div class="container-fluid">
           <div class="card">
             <div class="card-body">
               <center><h4>Create an appointment</h4></center><br>
-              <form class="form-group" method="post" action="admin-panel.php" id="appointmentForm">
+              <form class="form-group" method="post" action="admin-panel.php">
                 <div class="row">
-                  
-                  <!-- <?php
-
-                        $con=mysqli_connect("localhost","root","","myhmsdb");
-                        $query=mysqli_query($con,"select username,spec from doctb");
-                        $docarray = array();
-                          while($row =mysqli_fetch_assoc($query))
-                          {
-                              $docarray[] = $row;
-                          }
-                          echo json_encode($docarray);
-
-                  ?> -->
-        
-
-                    <div class="col-md-4">
-                          <label for="spec">Specialization:</label>
-                        </div>
-                        <div class="col-md-8">
-                          <select name="spec" class="form-control" id="spec">
-                              <option value="" disabled selected>Select Specialization</option>
-                              <?php 
-                              display_specs();
-                              ?>
-                          </select>
-                        </div>
-
-                        <br><br>
-
-                        <script>
-                      document.getElementById('spec').onchange = function foo() {
-                        let spec = this.value;   
-                        console.log(spec)
-                        let docs = [...document.getElementById('doctor').options];
-                        
-                        docs.forEach((el, ind, arr)=>{
-                          arr[ind].setAttribute("style","");
-                          if (el.getAttribute("data-spec") != spec ) {
-                            arr[ind].setAttribute("style","display: none");
-                          }
-                        });
-                      };
-
+                  <div class="col-md-4">
+                    <label for="spec">Specialization:</label>
+                  </div>
+                  <div class="col-md-8">
+                    <select name="spec" class="form-control" id="spec">
+                      <option value="" disabled selected>Select Specialization</option>
+                      <?php display_specs(); ?>
+                    </select>
+                  </div>
+                  <br><br>
+                  <script>
+                    document.getElementById('spec').onchange = function foo() {
+                      let spec = this.value;   
+                      let docs = [...document.getElementById('doctor').options];
+                      docs.forEach((el, ind, arr) => {
+                        arr[ind].setAttribute("style","");
+                        if (el.getAttribute("data-spec") != spec ) {
+                          arr[ind].setAttribute("style","display: none");
+                        }
+                      });
+                    };
                   </script>
-
-              <div class="col-md-4"><label for="doctor">Doctors:</label></div>
-                <div class="col-md-8">
+                  <div class="col-md-4"><label for="doctor">Doctors:</label></div>
+                  <div class="col-md-8">
                     <select name="doctor" class="form-control" id="doctor" required="required">
                       <option value="" disabled selected>Select Doctor</option>
-                
                       <?php display_docs(); ?>
                     </select>
                   </div><br/><br/> 
@@ -1030,43 +1089,52 @@ function get_specs(){
                                 Consultancy Fees
                               </label></div>
                               <div class="col-md-8">
+                              <!-- <div id="docFees">Select a doctor</div> -->
                               <input class="form-control" type="text" name="docFees" id="docFees" readonly="readonly"/>
                   </div><br><br>
-
                   <div class="col-md-4"><label>Appointment Date</label></div>
                   <div class="col-md-8">
-                    <input type="date" class="form-control datepicker" name="appdate" id="appdate" required>
+                    <input type="date" class="form-control datepicker" name="appdate" required>
                   </div><br><br>
 
-                  <div class="col-md-4"><label>Appointment Time</label></div>
+                  <div class="col-md-4"><label>Available Time Slots</label></div>
                   <div class="col-md-8">
-                    <select name="apptime" class="form-control" id="apptime" required>
+                    <select name="apptime" class="form-control" id="apptime" required="required">
                       <option value="" disabled selected>Select Time</option>
-                      <option value="09:00:00">9:00 AM</option>
-                      <option value="10:00:00">10:00 AM</option>
-                      <option value="11:00:00">11:00 AM</option>
-                      <option value="12:00:00">12:00 PM</option>
-                      <option value="13:00:00">1:00 PM</option>
-                      <option value="14:00:00">2:00 PM</option>
-                      <option value="15:00:00">3:00 PM</option>
-                      <option value="16:00:00">4:00 PM</option>
-                      <option value="17:00:00">5:00 PM</option>
-                      <option value="18:00:00">6:00 PM</option>
-                      <option value="19:00:00">7:00 PM</option>
-                      <option value="20:00:00">8:00 PM</option>
                     </select>
                   </div><br><br>
 
                   <script>
                   $(document).ready(function() {
-                    // Set minimum date to today
-                    var today = new Date().toISOString().split('T')[0];
-                    $('#appdate').attr('min', today);
+                    // When doctor or date changes, update available time slots
+                    $('#doctor, #appdate').change(function() {
+                      var doctor = $('#doctor').val();
+                      var date = $('#appdate').val();
+                      
+                      if(doctor && date) {
+                        // Set minimum date to today
+                        var today = new Date().toISOString().split('T')[0];
+                        $('#appdate').attr('min', today);
+                        
+                        // Fetch available time slots
+                        $.ajax({
+                          url: 'get_available_slots.php',
+                          type: 'POST',
+                          data: {
+                            doctor: doctor,
+                            date: date
+                          },
+                          success: function(response) {
+                            $('#apptime').html(response);
+                          }
+                        });
+                      }
+                    });
                   });
                   </script>
 
                   <div class="col-md-4">
-                    <input type="submit" name="app-submit" value="Create new entry" class="btn btn-primary" id="submitBtn">
+                    <input type="submit" name="app-submit" value="Create new entry" class="btn btn-primary" id="inputbtn">
                   </div>
                   <div class="col-md-8"></div>                  
                 </div>
@@ -1461,92 +1529,6 @@ function get_specs(){
     </div>
   </div>
 </div>
-
-      <div class="tab-pane fade" id="list-disease-pred" role="tabpanel" aria-labelledby="list-disease-pred-list">
-        <div class="container-fluid">
-            <div class="card">
-                <div class="card-body">
-                    <h4 class="card-title">Multiple Disease Prediction System</h4>
-                    <p class="card-text">Use our advanced AI-powered system to assist in early disease detection and patient screening.</p>
-                    
-                    <div class="row mt-4">
-                        <div class="col-md-6">
-                            <h5>Available Disease Predictions:</h5>
-                            <ul class="list-unstyled">
-                                <li><i class="fa fa-check-circle text-success"></i> Diabetes</li>
-                                <li><i class="fa fa-check-circle text-success"></i> Heart Disease</li>
-                                <li><i class="fa fa-check-circle text-success"></i> Parkinson's Disease</li>
-                                <li><i class="fa fa-check-circle text-success"></i> Liver Disease</li>
-                            </ul>
-                        </div>
-                        <div class="col-md-6">
-                            <h5>Key Features:</h5>
-                            <ul class="list-unstyled">
-                                <li><i class="fa fa-arrow-right text-primary"></i> Symptom-based analysis</li>
-                                <li><i class="fa fa-arrow-right text-primary"></i> Medical history integration</li>
-                                <li><i class="fa fa-arrow-right text-primary"></i> Lab results interpretation</li>
-                                <li><i class="fa fa-arrow-right text-primary"></i> Risk factor assessment</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="text-center my-4">
-                        <a href="https://multiple-disease-prediction-hms.streamlit.app/" target="_blank" class="btn btn-primary btn-lg">
-                            <i class="fa fa-stethoscope"></i> Launch Disease Prediction Tool
-                        </a>
-                    </div>
-
-                    <div class="alert alert-warning">
-                        <strong><i class="fa fa-exclamation-triangle"></i> Important Note:</strong>
-                        <p class="mb-0">This tool is designed to assist in clinical decision-making but should not replace professional medical judgment.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-      </div>
-
-      <div class="tab-pane fade" id="list-brain" role="tabpanel" aria-labelledby="list-brain-list">
-        <div class="container-fluid">
-            <div class="card">
-                <div class="card-body">
-                    <h4 class="card-title">Brain Tumor Detection System</h4>
-                    <p class="card-text">Use our advanced AI-powered system for brain tumor detection and analysis.</p>
-                    
-                    <div class="row mt-4">
-                        <div class="col-md-6">
-                            <h5>Key Features:</h5>
-                            <ul class="list-unstyled">
-                                <li><i class="fa fa-check-circle text-success"></i> MRI Image Analysis</li>
-                                <li><i class="fa fa-check-circle text-success"></i> Real-time Detection</li>
-                                <li><i class="fa fa-check-circle text-success"></i> High Accuracy Results</li>
-                                <li><i class="fa fa-check-circle text-success"></i> Instant Report Generation</li>
-                            </ul>
-                        </div>
-                        <div class="col-md-6">
-                            <h5>Benefits:</h5>
-                            <ul class="list-unstyled">
-                                <li><i class="fa fa-arrow-right text-primary"></i> Early Detection</li>
-                                <li><i class="fa fa-arrow-right text-primary"></i> Quick Analysis</li>
-                                <li><i class="fa fa-arrow-right text-primary"></i> Support Clinical Decisions</li>
-                                <li><i class="fa fa-arrow-right text-primary"></i> Improved Patient Care</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="text-center my-4">
-                        <a href="https://brain-tumor-detection-master.streamlit.app/" target="_blank" class="btn btn-primary btn-lg">
-                            <i class="fa fa-stethoscope"></i> Launch Brain Tumor Detection Tool
-                        </a>
-                    </div>
-
-                    <div class="alert alert-warning">
-                        <strong><i class="fa fa-exclamation-triangle"></i> Important Note:</strong>
-                        <p class="mb-0">This tool is designed to assist in clinical decision-making but should not replace professional medical judgment.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-      </div>
     </div>
   </div>
 </div>
@@ -2108,3 +2090,75 @@ function get_specs(){
     </script>
   </body>
 </html>
+<script>
+document.getElementById('appointmentForm').onsubmit = function(e) {
+    var date = document.getElementById('appdate').value;
+    var time = document.getElementById('apptime').value;
+    var today = new Date().toISOString().split('T')[0];
+    
+    if(date < today) {
+        if (!$('#doctorSelect').val()) {
+        alert("Cannot book appointment for past date!");
+        e.preventDefault();
+        return false;
+    }
+
+    var timeArr = time.split(':');
+    var selectedTime = new Date();
+    selectedTime.setHours(timeArr[0], timeArr[1]);
+
+    var startTime = new Date();
+    startTime.setHours(9, 0); // 9:00 AM
+    
+    var endTime = new Date();
+    endTime.setHours(18, 0); // 6:00 PM
+
+    if(selectedTime < startTime || selectedTime > endTime) {
+        alert("Please select appointment time between 9:00 AM and 6:00 PM!");
+        e.preventDefault();
+        return false;
+    }
+
+    return true;
+}
+</script>
+
+            $('#scheduleGrid').html('<p class="text-center">Please select a doctor and date to view availability.</p>');
+        } else {
+            updateSchedule();
+        }
+    });
+    </script>
+  </body>
+</html>
+<script>
+document.getElementById('appointmentForm').onsubmit = function(e) {
+    var date = document.getElementById('appdate').value;
+    var time = document.getElementById('apptime').value;
+    var today = new Date().toISOString().split('T')[0];
+    
+    if(date < today) {
+        alert("Cannot book appointment for past date!");
+        e.preventDefault();
+        return false;
+    }
+
+    var timeArr = time.split(':');
+    var selectedTime = new Date();
+    selectedTime.setHours(timeArr[0], timeArr[1]);
+
+    var startTime = new Date();
+    startTime.setHours(9, 0); // 9:00 AM
+    
+    var endTime = new Date();
+    endTime.setHours(18, 0); // 6:00 PM
+
+    if(selectedTime < startTime || selectedTime > endTime) {
+        alert("Please select appointment time between 9:00 AM and 6:00 PM!");
+        e.preventDefault();
+        return false;
+    }
+
+    return true;
+}
+</script>
