@@ -15,8 +15,7 @@ $con=mysqli_connect("localhost","root","","myhmsdb");
 
 
 
-if(isset($_POST['app-submit']))
-{
+if(isset($_POST['app-submit'])) {
   $pid = $_SESSION['pid'];
   $username = $_SESSION['username'];
   $email = $_SESSION['email'];
@@ -24,89 +23,78 @@ if(isset($_POST['app-submit']))
   $lname = $_SESSION['lname'];
   $gender = $_SESSION['gender'];
   $contact = $_SESSION['contact'];
-  $doctor=$_POST['doctor'];
-  $email=$_SESSION['email'];
-  $docFees=$_POST['docFees'];
+  $doctor = mysqli_real_escape_string($con, $_POST['doctor']);
+  $docFees = mysqli_real_escape_string($con, $_POST['docFees']);
+  $appdate = mysqli_real_escape_string($con, $_POST['appdate']);
+  $apptime = mysqli_real_escape_string($con, $_POST['apptime']);
 
-  $appdate=$_POST['appdate'];
-  $apptime=$_POST['apptime'];
+  // Validate that the appointment time is in the future
   $cur_date = date("Y-m-d");
-  date_default_timezone_set('Asia/Kolkata');
   $cur_time = date("H:i:s");
-  $apptime1 = strtotime($apptime);
-  $appdate1 = strtotime($appdate);
-	
-  if(date("Y-m-d",$appdate1)>=$cur_date){
-    if((date("Y-m-d",$appdate1)==$cur_date and date("H:i:s",$apptime1)>$cur_time) or date("Y-m-d",$appdate1)>$cur_date) {
-      $check_query = mysqli_query($con,"select apptime from appointmenttb where doctor='$doctor' and appdate='$appdate' and apptime='$apptime'");
-
-        if(mysqli_num_rows($check_query)==0){
-          $query = mysqli_query($con, sprintf(
-            "INSERT INTO appointmenttb (pid, fname, lname, gender, email, contact, doctor, docFees, appdate, apptime, userStatus, doctorStatus) 
-             VALUES (%d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', 1, 1)",
-            mysqli_real_escape_string($con, $pid),
-            mysqli_real_escape_string($con, $fname),
-            mysqli_real_escape_string($con, $lname),
-            mysqli_real_escape_string($con, $gender),
-            mysqli_real_escape_string($con, $email),
-            mysqli_real_escape_string($con, $contact),
-            mysqli_real_escape_string($con, $doctor),
-            mysqli_real_escape_string($con, $docFees),
-            mysqli_real_escape_string($con, $appdate),
-            mysqli_real_escape_string($con, $apptime)
-        ));
-        
-        if($query) {
-            echo "<script>
-                alert('Your appointment successfully booked');
-                window.location.href = window.location.href;
-            </script>";
-            exit();
-        } else {
-            echo "<script>
-                alert('Unable to process your request. Please try again!');
-                window.location.href = window.location.href;
-            </script>";
-            exit();
-        }
+  
+  if($appdate >= $cur_date) {
+    // Check if slot is already booked
+    $check_query = mysqli_query($con, "SELECT * FROM appointmenttb 
+                                     WHERE doctor='$doctor' 
+                                     AND appdate='$appdate' 
+                                     AND apptime='$apptime'
+                                     AND userStatus=1 
+                                     AND doctorStatus=1
+                                     AND (status IS NULL OR status != 'completed')");
+    
+    if(mysqli_num_rows($check_query) == 0) {
+      $query = mysqli_query($con, "INSERT INTO appointmenttb 
+                                 (pid, fname, lname, gender, email, contact, doctor, docFees, appdate, apptime, userStatus, doctorStatus) 
+                                 VALUES ($pid, '$fname', '$lname', '$gender', '$email', '$contact', '$doctor', '$docFees', '$appdate', '$apptime', 1, 1)");
+      
+      if($query) {
+        echo "<script>
+          alert('Your appointment is successfully booked!');
+          window.location.href = 'admin-panel.php#app-hist';
+        </script>";
       } else {
         echo "<script>
-            alert('We are sorry to inform that the doctor is not available in this time or date. Please choose different time or date!');
-            window.history.back();
+          alert('Unable to process appointment: " . mysqli_error($con) . "');
+          window.location.href = 'admin-panel.php#list-home';
         </script>";
-        exit();
       }
     } else {
       echo "<script>
-          alert('Select a time or date in the future!');
-          window.history.back();
+        alert('This slot is already booked! Please select a different time.');
+        window.location.href = 'admin-panel.php#list-home';
       </script>";
-      exit();
     }
   } else {
     echo "<script>
-        alert('Select a time or date in the future!');
-        window.history.back();
+      alert('Select a future date for appointment!');
+      window.location.href = 'admin-panel.php#list-home';
     </script>";
-    exit();
   }
 }
 
-if(isset($_GET['cancel']))
-  {
-    $query=mysqli_query($con,"update appointmenttb set userStatus='0' where ID = '".$_GET['ID']."'");
-    if($query)
-    {
-      echo "<script>alert('Your appointment successfully cancelled');</script>";
-    }
+if(isset($_GET['cancel'])) {
+  $query = mysqli_query($con, "UPDATE appointmenttb SET userStatus='0' WHERE ID = '".$_GET['ID']."'");
+  if($query) {
+    echo "<script>
+      alert('Your appointment successfully cancelled!');
+      window.location.href = 'admin-panel.php#app-hist';
+    </script>";
+  } else {
+    echo "<script>alert('Error cancelling appointment: " . mysqli_error($con) . "');</script>";
   }
+}
 
 if(isset($_GET['complete']))
 {
   $query=mysqli_query($con,"UPDATE appointmenttb SET status='completed' WHERE ID = '".$_GET['ID']."'");
   if($query)
   {
-    echo "<script>alert('Appointment marked as completed');</script>";
+    echo "<script>
+      alert('Appointment marked as completed successfully!');
+      window.location.href = 'admin-panel.php#app-hist';
+    </script>";
+  } else {
+    echo "<script>alert('Error updating appointment status: " . mysqli_error($con) . "');</script>";
   }
 }
 
@@ -1042,7 +1030,6 @@ function get_specs(){
                                 Consultancy Fees
                               </label></div>
                               <div class="col-md-8">
-                              <!-- <div id="docFees">Select a doctor</div> -->
                               <input class="form-control" type="text" name="docFees" id="docFees" readonly="readonly"/>
                   </div><br><br>
 
@@ -1051,39 +1038,30 @@ function get_specs(){
                     <input type="date" class="form-control datepicker" name="appdate" id="appdate" required>
                   </div><br><br>
 
-                  <div class="col-md-4"><label>Available Time Slots</label></div>
+                  <div class="col-md-4"><label>Appointment Time</label></div>
                   <div class="col-md-8">
-                    <select name="apptime" class="form-control" id="apptime" required="required">
+                    <select name="apptime" class="form-control" id="apptime" required>
                       <option value="" disabled selected>Select Time</option>
+                      <option value="09:00:00">9:00 AM</option>
+                      <option value="10:00:00">10:00 AM</option>
+                      <option value="11:00:00">11:00 AM</option>
+                      <option value="12:00:00">12:00 PM</option>
+                      <option value="13:00:00">1:00 PM</option>
+                      <option value="14:00:00">2:00 PM</option>
+                      <option value="15:00:00">3:00 PM</option>
+                      <option value="16:00:00">4:00 PM</option>
+                      <option value="17:00:00">5:00 PM</option>
+                      <option value="18:00:00">6:00 PM</option>
+                      <option value="19:00:00">7:00 PM</option>
+                      <option value="20:00:00">8:00 PM</option>
                     </select>
                   </div><br><br>
 
                   <script>
                   $(document).ready(function() {
-                    // When doctor or date changes, update available time slots
-                    $('#doctor, #appdate').change(function() {
-                      var doctor = $('#doctor').val();
-                      var date = $('#appdate').val();
-                      
-                      if(doctor && date) {
-                        // Set minimum date to today
-                        var today = new Date().toISOString().split('T')[0];
-                        $('#appdate').attr('min', today);
-                        
-                        // Fetch available time slots
-                        $.ajax({
-                          url: 'get_available_slots.php',
-                          type: 'POST',
-                          data: {
-                            doctor: doctor,
-                            date: date
-                          },
-                          success: function(response) {
-                            $('#apptime').html(response);
-                          }
-                        });
-                      }
-                    });
+                    // Set minimum date to today
+                    var today = new Date().toISOString().split('T')[0];
+                    $('#appdate').attr('min', today);
                   });
                   </script>
 
@@ -1575,7 +1553,7 @@ function get_specs(){
    </div>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.10.1/sweetalert2.all.min.js"></script>

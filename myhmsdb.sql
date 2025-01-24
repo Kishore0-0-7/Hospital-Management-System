@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 14, 2025 at 02:30 PM
+-- Generation Time: Jan 24, 2025 at 08:27 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -84,9 +84,9 @@ INSERT INTO `appointmenttb` (`pid`, `ID`, `fname`, `lname`, `gender`, `email`, `
 (4, 11, 'vishnu', 'V', 'Male', 'vishnu@gmail.com', '9361070035', 'Dinesh', 700, '2020-03-27', '15:00:00', 1, 1, NULL),
 (9, 12, 'yuvan', 'prasad', 'Male', 'yuvan@gmail.com', '8683619153', 'Kumar', 800, '2020-03-26', '12:00:00', 1, 1, NULL),
 (9, 13, 'yuvan', 'prasad', 'Male', 'yuvan@gmail.com', '8683619153', 'Tin', 450, '2020-03-26', '14:00:00', 1, 1, NULL),
-(6, 14, 'sai', 'S', 'Male', 'sai@gmail.com', '9059986865', 'arun', 600, '2025-01-16', '12:00:00', 1, 2, 'completed'),
-(6, 15, 'sai', 'S', 'Male', 'sai@gmail.com', '9059986865', 'arun', 600, '2025-01-14', '14:00:00', 1, 1, 'completed'),
-(6, 16, 'sai', 'S', 'Male', 'sai@gmail.com', '9059986865', 'arun', 600, '2025-01-14', '16:00:00', 1, 1, NULL);
+(6, 14, 'sai', 'S', 'Male', 'sai@gmail.com', '9059986865', 'arun', 600, '2025-01-16', '12:00:00', 1, 2, NULL),
+(6, 15, 'sai', 'S', 'Male', 'sai@gmail.com', '9059986865', 'arun', 600, '2025-01-14', '14:00:00', 1, 1, NULL),
+(6, 16, 'sai', 'S', 'Male', 'sai@gmail.com', '9059986865', 'arun', 600, '2025-01-14', '16:00:00', 0, 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -149,6 +149,87 @@ INSERT INTO `doctb` (`username`, `password`, `email`, `spec`, `docFees`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `doctor_schedule`
+--
+
+DROP TABLE IF EXISTS `doctor_schedule`;
+CREATE TABLE IF NOT EXISTS `doctor_schedule` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `doctor` varchar(50) DEFAULT NULL,
+  `day_of_week` int(11) DEFAULT NULL,
+  `start_time` time DEFAULT NULL,
+  `end_time` time DEFAULT NULL,
+  `slot_duration` int(11) DEFAULT 30,
+  `is_available` tinyint(1) DEFAULT 1,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unique_schedule` (`doctor`,`day_of_week`)
+) ENGINE=InnoDB AUTO_INCREMENT=68 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `doctor_schedule`
+--
+
+INSERT INTO `doctor_schedule` (`id`, `doctor`, `day_of_week`, `start_time`, `end_time`, `slot_duration`, `is_available`) VALUES
+(1, 'ajay', 1, '09:00:00', '17:00:00', 30, 1),
+(2, 'ajay', 2, '09:00:00', '17:00:00', 30, 1),
+(3, 'ajay', 3, '09:00:00', '17:00:00', 30, 1),
+(4, 'ajay', 4, '09:00:00', '17:00:00', 30, 1),
+(5, 'ajay', 5, '09:00:00', '17:00:00', 30, 1),
+(6, 'ajay', 0, '10:00:00', '14:00:00', 30, 1),
+(7, 'ajay', 6, '10:00:00', '14:00:00', 30, 1),
+(10, 'arun', 3, '09:00:00', '17:00:00', 30, 1),
+(11, 'arun', 4, '09:00:00', '17:00:00', 30, 1),
+(13, 'arun', 0, '10:00:00', '14:00:00', 30, 1),
+(14, 'arun', 6, '10:00:00', '14:00:00', 30, 1),
+(15, 'Dinesh', 1, '09:00:00', '17:00:00', 30, 1),
+(16, 'Dinesh', 2, '09:00:00', '17:00:00', 30, 1),
+(17, 'Dinesh', 3, '09:00:00', '17:00:00', 30, 1),
+(18, 'Dinesh', 4, '09:00:00', '17:00:00', 30, 1),
+(19, 'Dinesh', 5, '09:00:00', '17:00:00', 30, 1),
+(20, 'Dinesh', 0, '10:00:00', '14:00:00', 30, 1),
+(21, 'Dinesh', 6, '10:00:00', '14:00:00', 30, 1),
+(22, 'Ganesh', 1, '09:00:00', '17:00:00', 30, 1),
+(23, 'Ganesh', 2, '09:00:00', '17:00:00', 30, 1),
+(24, 'Ganesh', 3, '09:00:00', '17:00:00', 30, 1),
+(25, 'Ganesh', 4, '09:00:00', '17:00:00', 30, 1),
+(26, 'Ganesh', 5, '09:00:00', '17:00:00', 30, 1),
+(27, 'Ganesh', 0, '10:00:00', '14:00:00', 30, 1),
+(28, 'Ganesh', 6, '10:00:00', '14:00:00', 30, 1),
+(29, 'Kumar', 1, '09:00:00', '17:00:00', 30, 1),
+(30, 'Kumar', 2, '09:00:00', '17:00:00', 30, 1),
+(31, 'Kumar', 3, '09:00:00', '17:00:00', 30, 1),
+(32, 'Kumar', 4, '09:00:00', '17:00:00', 30, 1),
+(33, 'Kumar', 5, '09:00:00', '17:00:00', 30, 1),
+(34, 'Kumar', 0, '10:00:00', '14:00:00', 30, 1),
+(35, 'Kumar', 6, '10:00:00', '14:00:00', 30, 1),
+(36, 'john', 1, '09:00:00', '17:00:00', 30, 1),
+(37, 'john', 2, '09:00:00', '17:00:00', 30, 1),
+(38, 'john', 3, '09:00:00', '17:00:00', 30, 1),
+(39, 'john', 4, '09:00:00', '17:00:00', 30, 1),
+(40, 'john', 5, '09:00:00', '17:00:00', 30, 1),
+(41, 'john', 0, '10:00:00', '14:00:00', 30, 1),
+(42, 'john', 6, '10:00:00', '14:00:00', 30, 1),
+(43, 'Abi', 1, '09:00:00', '17:00:00', 30, 1),
+(44, 'Abi', 2, '09:00:00', '17:00:00', 30, 1),
+(45, 'Abi', 3, '09:00:00', '17:00:00', 30, 1),
+(46, 'Abi', 4, '09:00:00', '17:00:00', 30, 1),
+(47, 'Abi', 5, '09:00:00', '17:00:00', 30, 1),
+(48, 'Abi', 0, '10:00:00', '14:00:00', 30, 1),
+(49, 'Abi', 6, '10:00:00', '14:00:00', 30, 1),
+(50, 'Tin', 1, '09:00:00', '17:00:00', 30, 1),
+(51, 'Tin', 2, '09:00:00', '17:00:00', 30, 1),
+(52, 'Tin', 3, '09:00:00', '17:00:00', 30, 1),
+(53, 'Tin', 4, '09:00:00', '17:00:00', 30, 1),
+(54, 'Tin', 5, '09:00:00', '17:00:00', 30, 1),
+(55, 'Tin', 0, '10:00:00', '14:00:00', 30, 1),
+(56, 'Tin', 6, '10:00:00', '14:00:00', 30, 1),
+(59, 'arun', 2, '08:00:00', '09:00:00', 30, 1),
+(63, 'arun', 5, '08:15:00', '10:15:00', 60, 1),
+(67, 'arun', 1, '09:20:00', '10:21:00', 30, 1);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `documents`
 --
 
@@ -173,6 +254,27 @@ CREATE TABLE IF NOT EXISTS `documents` (
 
 INSERT INTO `documents` (`id`, `pid`, `doctor_id`, `document_name`, `document_type`, `file_path`, `uploaded_by`, `upload_date`, `description`) VALUES
 (2, 6, 'arun', 'doc.pdf', 'application/pdf', 'uploads/678519e5560c5_doc.pdf', 'doctor', '2025-01-13 19:19:25', 'report');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `feedback`
+--
+
+DROP TABLE IF EXISTS `feedback`;
+CREATE TABLE IF NOT EXISTS `feedback` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `patient_id` int(11) DEFAULT NULL,
+  `doctor_id` varchar(50) DEFAULT NULL,
+  `appointment_id` int(11) DEFAULT NULL,
+  `rating` int(11) DEFAULT NULL,
+  `comments` text DEFAULT NULL,
+  `feedback_date` timestamp NOT NULL DEFAULT current_timestamp(),
+  `anonymous` tinyint(1) DEFAULT 0,
+  PRIMARY KEY (`id`),
+  KEY `patient_id` (`patient_id`),
+  KEY `appointment_id` (`appointment_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -300,6 +402,31 @@ INSERT INTO `prestb` (`doctor`, `pid`, `ID`, `fname`, `lname`, `appdate`, `appti
 ('arun', 6, 14, 'sai', 'S', '2025-01-16', '12:00:00', 'cold', 'none', 'drink cough syrup', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 ('arun', 6, 14, 'sai', 'S', '2025-01-16', '12:00:00', 'cold', 'none', 'drink syrup', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `waiting_list`
+--
+
+DROP TABLE IF EXISTS `waiting_list`;
+CREATE TABLE IF NOT EXISTS `waiting_list` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `pid` int(11) NOT NULL,
+  `doctor` varchar(50) NOT NULL,
+  `priority` int(11) NOT NULL,
+  `notes` text DEFAULT NULL,
+  `added_date` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `pid` (`pid`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `waiting_list`
+--
+
+INSERT INTO `waiting_list` (`id`, `pid`, `doctor`, `priority`, `notes`, `added_date`) VALUES
+(1, 6, 'arun', 2, '', '2025-01-16 16:16:16');
+
 --
 -- Constraints for dumped tables
 --
@@ -311,10 +438,23 @@ ALTER TABLE `documents`
   ADD CONSTRAINT `documents_ibfk_1` FOREIGN KEY (`pid`) REFERENCES `patreg` (`pid`);
 
 --
+-- Constraints for table `feedback`
+--
+ALTER TABLE `feedback`
+  ADD CONSTRAINT `feedback_ibfk_1` FOREIGN KEY (`patient_id`) REFERENCES `patreg` (`pid`),
+  ADD CONSTRAINT `feedback_ibfk_2` FOREIGN KEY (`appointment_id`) REFERENCES `appointmenttb` (`ID`);
+
+--
 -- Constraints for table `patient_health_details`
 --
 ALTER TABLE `patient_health_details`
   ADD CONSTRAINT `patient_health_details_ibfk_1` FOREIGN KEY (`pid`) REFERENCES `patreg` (`pid`);
+
+--
+-- Constraints for table `waiting_list`
+--
+ALTER TABLE `waiting_list`
+  ADD CONSTRAINT `waiting_list_ibfk_1` FOREIGN KEY (`pid`) REFERENCES `patreg` (`pid`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

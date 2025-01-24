@@ -6,23 +6,29 @@ $doctor = $_SESSION['dname'];
 
 if(isset($_GET['complete']))
 {
-  $query=mysqli_query($con,"update appointmenttb set status='completed' where ID = '".$_GET['ID']."'");
+  $query=mysqli_query($con,"UPDATE appointmenttb SET status='completed' WHERE ID = '".$_GET['ID']."'");
   if($query)
   {
-    $_SESSION['success_msg'] = "Appointment marked as completed successfully!";
-    header("Location: doctor-panel.php");
-    exit();
+    echo "<script>
+      alert('Appointment marked as completed successfully!');
+      window.location.href = 'doctor-panel.php#list-app';
+    </script>";
+  } else {
+    echo "<script>alert('Unable to update appointment status. Error: " . mysqli_error($con) . "');</script>";
   }
 }
 
 if(isset($_GET['cancel']))
 {
-  $query=mysqli_query($con,"update appointmenttb set doctorStatus='0' where ID = '".$_GET['ID']."'");
+  $query=mysqli_query($con,"UPDATE appointmenttb SET doctorStatus='0' WHERE ID = '".$_GET['ID']."'");
   if($query)
   {
-    $_SESSION['success_msg'] = "Appointment cancelled successfully!";
-    header("Location: doctor-panel.php");
-    exit();
+    echo "<script>
+      alert('Appointment cancelled successfully!');
+      window.location.href = 'doctor-panel.php#list-app';
+    </script>";
+  } else {
+    echo "<script>alert('Unable to cancel appointment. Error: " . mysqli_error($con) . "');</script>";
   }
 }
 
@@ -296,21 +302,21 @@ if(isset($_GET['cancel']))
                      <td>
                         <?php if(($row['userStatus']==1) && ($row['doctorStatus']==1) && $row['status'] != 'completed')  
                         { ?>
-                          <a href="doctor-panel.php?ID=<?php echo $row['ID']?>&complete=update" 
+                          <a href="doctor-panel.php?ID=<?php echo $row['ID']?>&complete=1" 
                               onClick="return confirm('Are you sure you want to mark this appointment as completed?')"
                               title="Complete Appointment" tooltip-placement="top" tooltip="Complete">
                               <button class="btn btn-success">Complete</button>
                           </a>
-                          <a href="doctor-panel.php?ID=<?php echo $row['ID']?>&cancel=update" 
+                          <a href="doctor-panel.php?ID=<?php echo $row['ID']?>&cancel=1" 
                               onClick="return confirm('Are you sure you want to cancel this appointment ?')"
                               title="Cancel Appointment" tooltip-placement="top" tooltip="Remove">
                               <button class="btn btn-danger">Cancel</button>
                           </a>
 	                        <?php } else {
                             if($row['status'] == 'completed') {
-                              echo "Completed";
+                              echo "<span class='badge badge-success'>Completed</span>";
                             } else {
-                              echo "Cancelled";
+                              echo "<span class='badge badge-danger'>Cancelled</span>";
                             }
                           } ?>
                         </td>
