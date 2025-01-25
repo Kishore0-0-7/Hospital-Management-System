@@ -2121,14 +2121,7 @@ document.getElementById('appointmentForm').onsubmit = function(e) {
 
     return true;
 }
-</script>
 
-            $('#scheduleGrid').html('<p class="text-center">Please select a doctor and date to view availability.</p>');
-        } else {
-            updateSchedule();
-        }
-    });
-    </script>
   </body>
 </html>
 <script>
