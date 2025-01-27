@@ -1003,31 +1003,40 @@ if(isset($_GET['complete']))
               <form class="form-group" method="post" action="admin-panel.php">
                 <div class="row">
                   <div class="col-md-4">
-                    <label for="spec">Specialization:</label>
-                  </div>
-                  <div class="col-md-8">
-                    <select name="spec" class="form-control" id="spec">
-                      <option value="" disabled selected>Select Specialization</option>
-                      <?php display_specs(); ?>
-                    </select>
-                  </div>
-                  <br><br>
-                  <script>
-                    document.getElementById('spec').onchange = function foo() {
-                      let spec = this.value;   
-                      let docs = [...document.getElementById('doctor').options];
-                      docs.forEach((el, ind, arr) => {
-                        arr[ind].setAttribute("style","");
-                        if (el.getAttribute("data-spec") != spec ) {
-                          arr[ind].setAttribute("style","display: none");
-                        }
-                      });
-                    };
+                          <label for="spec">Specialization:</label>
+                        </div>
+                        <div class="col-md-8">
+                          <select name="spec" class="form-control" id="spec">
+                              <option value="" disabled selected>Select Specialization</option>
+                              <?php 
+                              display_specs();
+                              ?>
+                          </select>
+                        </div>
+
+                        <br><br>
+
+                        <script>
+                      document.getElementById('spec').onchange = function foo() {
+                        let spec = this.value;   
+                        console.log(spec)
+                        let docs = [...document.getElementById('doctor').options];
+                        
+                        docs.forEach((el, ind, arr)=>{
+                          arr[ind].setAttribute("style","");
+                          if (el.getAttribute("data-spec") != spec ) {
+                            arr[ind].setAttribute("style","display: none");
+                          }
+                        });
+                      };
+
                   </script>
-                  <div class="col-md-4"><label for="doctor">Doctors:</label></div>
-                  <div class="col-md-8">
+
+              <div class="col-md-4"><label for="doctor">Doctors:</label></div>
+                <div class="col-md-8">
                     <select name="doctor" class="form-control" id="doctor" required="required">
                       <option value="" disabled selected>Select Doctor</option>
+                
                       <?php display_docs(); ?>
                     </select>
                   </div><br/><br/> 
@@ -1040,98 +1049,20 @@ if(isset($_GET['complete']))
               };
             </script>
 
-                  
-                  
-
-                  
-                        <!-- <div class="col-md-4"><label for="doctor">Doctors:</label></div>
-                                <div class="col-md-8">
-                                    <select name="doctor" class="form-control" id="doctor1" required="required">
-                                      <option value="" disabled selected>Select Doctor</option>
-                                      
-                                    </select>
-                                </div>
-                                <br><br> -->
-
-                                <!-- <script>
-                                  document.getElementById("spec").onchange = function updateSpecs(event) {
-                                      var selected = document.querySelector(`[data-value=${this.value}]`).getAttribute("value");
-                                      console.log(selected);
-
-                                      var options = document.getElementById("doctor1").querySelectorAll("option");
-
-                                      for (i = 0; i < options.length; i++) {
-                                        var currentOption = options[i];
-                                        var category = options[i].getAttribute("data-spec");
-
-                                        if (category == selected) {
-                                          currentOption.style.display = "block";
-                                        } else {
-                                          currentOption.style.display = "none";
-                                        }
-                                      }
-                                    }
-                                </script> -->
-
-                        
-                    <!-- <script>
-                    let data = 
-                
-              document.getElementById('spec').onchange = function updateSpecs(e) {
-                let values = data.filter(obj => obj.spec == this.value).map(o => o.username);   
-                document.getElementById('doctor1').value = document.querySelector(`[value=${values}]`).getAttribute('data-value');
-              };
-            </script> -->
-
-
-                  
                   <div class="col-md-4"><label for="consultancyfees">
                                 Consultancy Fees
                               </label></div>
                               <div class="col-md-8">
-                              <!-- <div id="docFees">Select a doctor</div> -->
                               <input class="form-control" type="text" name="docFees" id="docFees" readonly="readonly"/>
                   </div><br><br>
-                  <div class="col-md-4"><label>Appointment Date</label></div>
-                  <div class="col-md-8">
-                    <input type="date" class="form-control datepicker" name="appdate" required>
-                  </div><br><br>
 
-                  <div class="col-md-4"><label>Available Time Slots</label></div>
-                  <div class="col-md-8">
-                    <select name="apptime" class="form-control" id="apptime" required="required">
-                      <option value="" disabled selected>Select Time</option>
-                    </select>
-                  </div><br><br>
+                  <div class="col-md-4"><label>Date</label></div>
+                  <div class="col-md-8"><input type="date" class="form-control datepicker" name="appdate"></div><br><br>
 
-                  <script>
-                  $(document).ready(function() {
-                    // When doctor or date changes, update available time slots
-                    $('#doctor, #appdate').change(function() {
-                      var doctor = $('#doctor').val();
-                      var date = $('#appdate').val();
-                      
-                      if(doctor && date) {
-                        // Set minimum date to today
-                        var today = new Date().toISOString().split('T')[0];
-                        $('#appdate').attr('min', today);
-                        
-                        // Fetch available time slots
-                        $.ajax({
-                          url: 'get_available_slots.php',
-                          type: 'POST',
-                          data: {
-                            doctor: doctor,
-                            date: date
-                          },
-                          success: function(response) {
-                            $('#apptime').html(response);
-                          }
-                        });
-                      }
-                    });
-                  });
-                  </script>
+                  <div class="col-md-4"><label>Time</label></div>
+                  <div class="col-md-8">
+                    <input type="time" class="form-control" name="apptime">
+                  </div><br><br>
 
                   <div class="col-md-4">
                     <input type="submit" name="app-submit" value="Create new entry" class="btn btn-primary" id="inputbtn">
@@ -1816,7 +1747,6 @@ if(isset($_GET['complete']))
           const href = this.getAttribute('href');
           clickDiv(href);
         });
-      });
       
       // Handle tab switching from dashboard links
       document.querySelectorAll('.panel-body a[onclick]').forEach(link => {
@@ -1825,7 +1755,6 @@ if(isset($_GET['complete']))
           const targetId = this.getAttribute('onclick').match(/'([^']+)'/)[1];
           clickDiv(targetId);
         });
-      });
     });
     </script>
 
