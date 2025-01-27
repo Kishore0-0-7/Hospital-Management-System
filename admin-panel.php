@@ -2037,10 +2037,10 @@ document.getElementById('appointmentForm').onsubmit = function(e) {
     selectedTime.setHours(timeArr[0], timeArr[1]);
 
     var startTime = new Date();
-    startTime.setHours(9, 0); // 9:00 AM
+    startTime.setHours(9, 0); 
     
     var endTime = new Date();
-    endTime.setHours(18, 0); // 6:00 PM
+    endTime.setHours(18, 0); 
 
     if(selectedTime < startTime || selectedTime > endTime) {
         alert("Please select appointment time between 9:00 AM and 6:00 PM!");
