@@ -501,6 +501,7 @@ if(isset($_GET['complete']))
       <a class="list-group-item list-group-item-action" id="list-analytics-list" data-toggle="list" href="#list-analytics" role="tab" aria-controls="home">Analytics</a>
       <a class="list-group-item list-group-item-action" id="list-docs-list" data-toggle="list" href="#list-docs" role="tab" aria-controls="home">Documents</a>
       <a class="list-group-item list-group-item-action" id="list-predict-list" data-toggle="list" href="#list-predict" role="tab">Disease Prediction</a>
+      <a class="list-group-item list-group-item-action" id="list-brain-list" data-toggle="list" href="#list-brain" role="tab">Brain Tumor Detection</a>
     </div><br>
   </div>
   <div class="col-md-8" style="margin-top: 3%;">
@@ -920,17 +921,17 @@ if(isset($_GET['complete']))
                   <h4 class="StepTitle" style="margin-top: 5%;">AI Health Check</h4>
                   <p class="text-muted">Multiple Disease Prediction System</p>
                   <p class="links cl-effect-1">
-                    <a href="https://multiple-disease-prediction-hms.streamlit.app/" target="_blank">
-                      Check Your Health Now
+                    <a href="#list-predict" onclick="clickDiv('#list-predict-list')">
+                      <i class="fa fa-stethoscope"></i> Start Health Check
                     </a>
                   </p>
                   <div class="small mt-2">
-                    <span class="text-muted">Analyze your risk for multiple conditions:</span>
+                    <span class="text-muted">Analyze your risk for:</span>
                     <ul class="list-unstyled mt-2">
-                        <li><i class="fa fa-check-circle text-success"></i> Diabetes</li>
-                        <li><i class="fa fa-check-circle text-success"></i> Heart Disease</li>
-                        <li><i class="fa fa-check-circle text-success"></i> Liver Disease</li>
-                        <li><i class="fa fa-check-circle text-success"></i> And more...</li>
+                      <li><i class="fa fa-check-circle text-success"></i> Diabetes</li>
+                      <li><i class="fa fa-check-circle text-success"></i> Heart Disease</li>
+                      <li><i class="fa fa-check-circle text-success"></i> Liver Disease</li>
+                      <li><i class="fa fa-check-circle text-success"></i> Parkinson's Disease</li>
                     </ul>
                   </div>
                 </div>
@@ -961,34 +962,6 @@ if(isset($_GET['complete']))
                         </div>
                     </div>
                 </div>
-            </div>
-
-            <!-- Brain Tumor Detection Panel -->
-            <div class="col-sm-4 mb-4">
-              <div class="panel panel-white no-radius text-center shadow-sm">
-                <div class="panel-body">
-                  <span class="fa-stack fa-2x"> 
-                    <i class="fa fa-square fa-stack-2x text-primary"></i> 
-                    <i class="fa fa-stethoscope fa-stack-1x fa-inverse"></i> 
-                  </span>
-                  <h4 class="StepTitle" style="margin-top: 5%;">Brain Tumor Detection</h4>
-                  <p class="text-muted">AI-Powered MRI Analysis</p>
-                  <p class="links cl-effect-1">
-                    <a href="#list-brain" onclick="clickDiv('#list-brain-list')">
-                      <i class="fa fa-stethoscope"></i> Launch Detection System
-                    </a>
-                  </p>
-                  <div class="small mt-2">
-                    <span class="text-muted">Key Features:</span>
-                    <ul class="list-unstyled mt-2">
-                      <li><i class="fa fa-check-circle text-success"></i> MRI Image Analysis</li>
-                      <li><i class="fa fa-check-circle text-success"></i> Real-time Detection</li>
-                      <li><i class="fa fa-check-circle text-success"></i> High Accuracy Results</li>
-                      <li><i class="fa fa-check-circle text-success"></i> Instant Reports</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
             </div>
 
           </div>
@@ -1460,6 +1433,37 @@ if(isset($_GET['complete']))
     </div>
   </div>
 </div>
+
+<!-- Brain Tumor Detection Section -->
+<div class="tab-pane fade" id="list-brain" role="tabpanel" aria-labelledby="list-brain-list">
+  <div class="card">
+    <div class="card-body">
+      <h4 class="card-title">Brain Tumor Detection System</h4>
+      <div class="alert alert-info">
+        <p><strong>AI-Powered Brain MRI Analysis</strong></p>
+        <p>Upload your MRI scan for instant tumor detection analysis:</p>
+        <ul>
+          <li>Advanced AI image processing</li>
+          <li>Quick and accurate results</li>
+          <li>Secure and confidential analysis</li>
+          <li>Professional-grade detection system</li>
+        </ul>
+      </div>
+      
+      <div class="text-center my-4">
+        <a href="https://brain-tumor-detection-master.streamlit.app/" target="_blank" class="btn btn-primary btn-lg">
+          <i class="fa fa-microscope"></i> Launch Detection System
+        </a>
+      </div>
+
+      <div class="alert alert-warning mt-3">
+        <i class="fa fa-exclamation-triangle"></i> 
+        <strong>Important Note:</strong> This tool is for preliminary screening only. Please consult with a qualified medical professional for proper diagnosis and treatment.
+      </div>
+    </div>
+  </div>
+</div>
+
     </div>
   </div>
 </div>
@@ -1467,7 +1471,7 @@ if(isset($_GET['complete']))
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6yp9BEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.10.1/sweetalert2.all.min.js"></script>
     <!-- Add Chart.js -->
@@ -2037,10 +2041,10 @@ document.getElementById('appointmentForm').onsubmit = function(e) {
     selectedTime.setHours(timeArr[0], timeArr[1]);
 
     var startTime = new Date();
-    startTime.setHours(9, 0); 
+    startTime.setHours(9, 0); // 9:00 AM
     
     var endTime = new Date();
-    endTime.setHours(18, 0); 
+    endTime.setHours(18, 0); // 6:00 PM
 
     if(selectedTime < startTime || selectedTime > endTime) {
         alert("Please select appointment time between 9:00 AM and 6:00 PM!");
