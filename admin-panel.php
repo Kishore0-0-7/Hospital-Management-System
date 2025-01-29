@@ -1261,14 +1261,34 @@ if(isset($_GET['complete']))
       <div class="tab-pane fade" id="list-health" role="tabpanel" aria-labelledby="list-health-list">
         <div class="card">
             <div class="card-body">
-              <div class="row mb-4">
-                <div class="col-md-6">
-                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#healthDetailsModal">
-                    View Health Details
-                  </button>
-                </div>
-              </div>
                 <h4 class="card-title">Update Health Details</h4>
+                <?php
+                // Display current health information at the top
+                $health_query = mysqli_query($con, "SELECT * FROM patient_health_details WHERE pid='$pid'");
+                if($health_info = mysqli_fetch_array($health_query)) {
+                    $height_m = $health_info['height'] / 100;
+                    $bmi = round($health_info['weight'] / ($height_m * $height_m), 1);
+                    echo "<div class='alert alert-info mb-4'>
+                        <h5>Current Health Information</h5>
+                        <div class='row'>
+                            <div class='col-md-6'>
+                                <p><strong>Age:</strong> ".$health_info['age']." years</p>
+                                <p><strong>Blood Group:</strong> ".$health_info['blood_group']."</p>
+                                <p><strong>Weight:</strong> ".$health_info['weight']." kg</p>
+                                <p><strong>Height:</strong> ".$health_info['height']." cm</p>
+                                <p><strong>BMI:</strong> ".$bmi." (".getBMICategory($bmi).")</p>
+                            </div>
+                            <div class='col-md-6'>
+                                <p><strong>Medical Conditions:</strong> ".($health_info['medical_conditions'] ?: 'None')."</p>
+                                <p><strong>Allergies:</strong> ".($health_info['allergies'] ?: 'None')."</p>
+                                <p><strong>Current Medications:</strong> ".($health_info['current_medications'] ?: 'None')."</p>
+                                <p><strong>Emergency Contact:</strong> ".($health_info['emergency_contact'] ?: 'Not provided')."</p>
+                                <p><strong>Last Updated:</strong> ".date('d M Y', strtotime($health_info['last_updated']))."</p>
+                            </div>
+                        </div>
+                    </div>";
+                }
+                ?>
                 <form class="form-group" method="post" action="update_health_details.php">
                     <div class="row">
                         <div class="col-md-4"><label>Age:</label></div>
@@ -1300,7 +1320,7 @@ if(isset($_GET['complete']))
                     </div><br>
                     <div class="row">
                         <div class="col-md-4"><label>Height (cm):</label></div>
-                        <div class="col-md-8"></div></div>
+                        <div class="col-md-8">
                             <input type="number" step="0.01" class="form-control" name="height" required>
                         </div>
                     </div><br>
@@ -1320,59 +1340,30 @@ if(isset($_GET['complete']))
                         <div class="col-md-4"><label>Current Medications:</label></div>
                         <div class="col-md-8">
                             <textarea class="form-control" name="current_medications" rows="3"></textarea>
-                    <input type="submit" name="update_health_details" value="Update Details" class="btn btn-primary">
+                        </div>
+                    </div><br>
+                    <div class="row">
+                        <div class="col-md-4"><label>Emergency Contact:</label></div>
+                        <div class="col-md-8">
+                            <input type="text" class="form-control" name="emergency_contact" placeholder="Emergency Contact Name">
+                        </div>
+                    </div><br>
+                    <div class="row">
+                        <div class="col-md-4"><label>Emergency Contact Phone:</label></div>
+                        <div class="col-md-8">
+                            <input type="tel" class="form-control" name="emergency_contact_phone" placeholder="Emergency Contact Phone">
+                        </div>
+                    </div><br>
+                    <div class="row">
+                        <div class="col-md-4"></div>
+                        <div class="col-md-8">
+                            <input type="submit" name="update_health_details" value="Update Details" class="btn btn-primary">
+                        </div>
+                    </div>
                 </form>
             </div>
         </div>
     </div>
-
-  <!-- Health Details Modal -->
-  <div class="modal fade" id="healthDetailsModal" tabindex="-1" role="dialog" aria-labelledby="healthDetailsModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="healthDetailsModalLabel">My Health Details</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <div class="row">
-            <div class="col-md-6">
-              <h6>Personal Information</h6>
-              <p><strong>Patient ID:</strong> <?php echo $pid; ?></p>
-              <p><strong>Name:</strong> <?php echo $fname . ' ' . $lname; ?></p>
-              <p><strong>Gender:</strong> <?php echo $gender; ?></p>
-              <p><strong>Email:</strong> <?php echo $email; ?></p>
-              <p><strong>Contact:</strong> <?php echo $contact; ?></p>
-            </div>
-            <div class="col-md-6">
-              <h6>Health Information</h6>
-              <?php
-              // Fetch health details
-              $health_query = mysqli_query($con, "SELECT * FROM patient_health_details WHERE pid='$pid'");
-              if($health_info = mysqli_fetch_array($health_query)) {
-                echo "<p><strong>Age:</strong> ".$health_info['age']."</p>";
-                echo "<p><strong>Blood Group:</strong> ".$health_info['blood_group']."</p>";
-                echo "<p><strong>Weight:</strong> ".$health_info['weight']." kg</p>";
-                echo "<p><strong>Height:</strong> ".$health_info['height']." cm</p>";
-                echo "<p><strong>Medical Conditions:</strong> ".$health_info['medical_conditions']."</p>";
-                echo "<p><strong>Allergies:</strong> ".$health_info['allergies']."</p>";
-                echo "<p><strong>Current Medications:</strong> ".$health_info['current_medications']."</p>";
-                echo "<p><strong>Emergency Contact:</strong> ".$health_info['emergency_contact']." (".$health_info['emergency_contact_phone'].")</p>";
-              } else {
-                echo "<p>No health details available</p>";
-              }
-              ?>
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        </div>
-      </div>
-    </div>
-  </div>
 
       <div class="tab-pane fade" id="list-messages" role="tabpanel" aria-labelledby="list-messages-list">...</div>
       <div class="tab-pane fade" id="list-settings" role="tabpanel" aria-labelledby="list-settings-list">
@@ -2087,4 +2078,49 @@ document.getElementById('appointmentForm').onsubmit = function(e) {
 
     return true;
 }
+</script>
+
+<!-- Add this function before the closing PHP tag -->
+<?php
+function getBMICategory($bmi) {
+    if($bmi < 18.5) return "Underweight";
+    if($bmi < 25) return "Normal";
+    if($bmi < 30) return "Overweight";
+    return "Obese";
+}
+?>
+
+<!-- Add this JavaScript before the closing body tag -->
+<script>
+$(document).ready(function() {
+    // Pre-fill the update form with existing data when available
+    <?php
+    $health_query = mysqli_query($con, "SELECT * FROM patient_health_details WHERE pid='$pid'");
+    if($health_info = mysqli_fetch_array($health_query)) {
+        echo "
+        $('input[name=\"age\"]').val('".$health_info['age']."');
+        $('select[name=\"blood_group\"]').val('".$health_info['blood_group']."');
+        $('input[name=\"weight\"]').val('".$health_info['weight']."');
+        $('input[name=\"height\"]').val('".$health_info['height']."');
+        $('textarea[name=\"medical_conditions\"]').val('".$health_info['medical_conditions']."');
+        $('textarea[name=\"allergies\"]').val('".$health_info['allergies']."');
+        $('textarea[name=\"current_medications\"]').val('".$health_info['current_medications']."');
+        $('input[name=\"emergency_contact\"]').val('".$health_info['emergency_contact']."');
+        $('input[name=\"emergency_contact_phone\"]').val('".$health_info['emergency_contact_phone']."');
+        ";
+    }
+    ?>
+
+    // Show success message if update was successful
+    <?php if(isset($_SESSION['health_update_success'])) { ?>
+        alert('<?php echo $_SESSION['health_update_success']; ?>');
+        <?php unset($_SESSION['health_update_success']); ?>
+    <?php } ?>
+
+    // Show error message if update failed
+    <?php if(isset($_SESSION['health_update_error'])) { ?>
+        alert('<?php echo $_SESSION['health_update_error']; ?>');
+        <?php unset($_SESSION['health_update_error']); ?>
+    <?php } ?>
+});
 </script>
