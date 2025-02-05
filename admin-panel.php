@@ -4,31 +4,6 @@ include('func.php');
 include('newfunc.php');
 $con=mysqli_connect("localhost","root","","myhmsdb");
 
-// Add this near the top of the file where other includes are
-if(isset($_POST['app-submit']))
-{
-  $pid = $_SESSION['pid'];
-  $username = $_SESSION['username'];
-  $email = $_SESSION['email'];
-  $fname = $_SESSION['fname'];
-  $lname = $_SESSION['lname'];
-  $gender = $_SESSION['gender'];
-  $contact = $_SESSION['contact'];
-  $doctor = $_POST['doctor'];
-  $docFees = $_POST['docFees'];
-  $appdate = $_POST['appdate'];
-  $apptime = $_POST['apptime'];
-  
-  $query = mysqli_query($con,"insert into appointmenttb(pid,fname,lname,gender,email,contact,doctor,docFees,appdate,apptime,userStatus,doctorStatus) values($pid,'$fname','$lname','$gender','$email','$contact','$doctor','$docFees','$appdate','$apptime','1','1')");
-
-  if($query)
-  {
-    echo "<script>alert('Your appointment successfully booked');</script>";
-  }
-  else{
-    echo "<script>alert('Unable to process your request. Please try again!');</script>";
-  }
-}
 
   $pid = $_SESSION['pid'];
   $username = $_SESSION['username'];
@@ -37,6 +12,7 @@ if(isset($_POST['app-submit']))
   $gender = $_SESSION['gender'];
   $lname = $_SESSION['lname'];
   $contact = $_SESSION['contact'];
+
 
 
 if(isset($_POST['app-submit']))
@@ -134,105 +110,79 @@ if(isset($_GET['complete']))
   }
 }
 
-  // Add this function to show available slots
-  function getAvailableSlots($doctor, $date) {
-    global $con;
+
+
+
+function generate_bill(){
+  $con=mysqli_connect("localhost","root","","myhmsdb");
+  $pid = $_SESSION['pid'];
+  $output='';
+  $query=mysqli_query($con,"select p.pid,p.ID,p.fname,p.lname,p.doctor,p.appdate,p.apptime,p.disease,p.allergy,p.prescription,a.docFees from prestb p inner join appointmenttb a on p.ID=a.ID and p.pid = '$pid' and p.ID = '".$_GET['ID']."'");
+  while($row = mysqli_fetch_array($query)){
+    $output .= '
+    <label> Patient ID : </label>'.$row["pid"].'<br/><br/>
+    <label> Appointment ID : </label>'.$row["ID"].'<br/><br/>
+    <label> Patient Name : </label>'.$row["fname"].' '.$row["lname"].'<br/><br/>
+    <label> Doctor Name : </label>'.$row["doctor"].'<br/><br/>
+    <label> Appointment Date : </label>'.$row["appdate"].'<br/><br/>
+    <label> Appointment Time : </label>'.$row["apptime"].'<br/><br/>
+    <label> Disease : </label>'.$row["disease"].'<br/><br/>
+    <label> Allergies : </label>'.$row["allergy"].'<br/><br/>
+    <label> Prescription : </label>'.$row["prescription"].'<br/><br/>
+    <label> Fees Paid : </label>'.$row["docFees"].'<br/>
     
-    $slots = array(
-      "09:00:00" => true, "09:30:00" => true, "10:00:00" => true,
-      "10:30:00" => true, "11:00:00" => true, "11:30:00" => true,
-      "12:00:00" => true, "12:30:00" => true, "13:00:00" => true,
-      "13:30:00" => true, "14:00:00" => true, "14:30:00" => true,
-      "15:00:00" => true, "15:30:00" => true, "16:00:00" => true,
-      "16:30:00" => true, "17:00:00" => true, "17:30:00" => true
-    );
-
-    // Get booked slots
-    $query = mysqli_query($con, 
-      "SELECT apptime FROM appointmenttb 
-      WHERE doctor='$doctor' 
-      AND appdate='$date' 
-      AND (userStatus='1' OR doctorStatus='1')");
-
-    while($row = mysqli_fetch_array($query)) {
-      if(isset($slots[$row['apptime']])) {
-        $slots[$row['apptime']] = false;
-      }
-    }
-
-    return $slots;
-  }
-
-  function generate_bill(){
-    $con=mysqli_connect("localhost","root","","myhmsdb");
-    $pid = $_SESSION['pid'];
-    $output='';
-    $query=mysqli_query($con,"select p.pid,p.ID,p.fname,p.lname,p.doctor,p.appdate,p.apptime,p.disease,p.allergy,p.prescription,a.docFees from prestb p inner join appointmenttb a on p.ID=a.ID and p.pid = '$pid' and p.ID = '".$_GET['ID']."'");
-    while($row = mysqli_fetch_array($query)){
-      $output .= '
-      <label> Patient ID : </label>'.$row["pid"].'<br/><br/>
-      <label> Appointment ID : </label>'.$row["ID"].'<br/><br/>
-      <label> Patient Name : </label>'.$row["fname"].' '.$row["lname"].'<br/><br/>
-      <label> Doctor Name : </label>'.$row["doctor"].'<br/><br/>
-      <label> Appointment Date : </label>'.$row["appdate"].'<br/><br/>
-      <label> Appointment Time : </label>'.$row["apptime"].'<br/><br/>
-      <label> Disease : </label>'.$row["disease"].'<br/><br/>
-      <label> Allergies : </label>'.$row["allergy"].'<br/><br/>
-      <label> Prescription : </label>'.$row["prescription"].'<br/><br/>
-      <label> Fees Paid : </label>'.$row["docFees"].'<br/>
-      
-      ';
-
-    }
-    
-    return $output;
-  }
-
-
-  if(isset($_GET["generate_bill"])){
-    require_once("TCPDF/tcpdf.php");
-    $obj_pdf = new TCPDF('P',PDF_UNIT,PDF_PAGE_FORMAT,true,'UTF-8',false);
-    $obj_pdf -> SetCreator(PDF_CREATOR);
-    $obj_pdf -> SetTitle("Generate Bill");
-    $obj_pdf -> SetHeaderData('','',PDF_HEADER_TITLE,PDF_HEADER_STRING);
-    $obj_pdf -> SetHeaderFont(Array(PDF_FONT_NAME_MAIN,'',PDF_FONT_SIZE_MAIN));
-    $obj_pdf -> SetFooterFont(Array(PDF_FONT_NAME_MAIN,'',PDF_FONT_SIZE_MAIN));
-    $obj_pdf -> SetDefaultMonospacedFont('helvetica');
-    $obj_pdf -> SetFooterMargin(PDF_MARGIN_FOOTER);
-    $obj_pdf -> SetMargins(PDF_MARGIN_LEFT,'5',PDF_MARGIN_RIGHT);
-    $obj_pdf -> SetPrintHeader(false);
-    $obj_pdf -> SetPrintFooter(false);
-    $obj_pdf -> SetAutoPageBreak(TRUE, 10);
-    $obj_pdf -> SetFont('helvetica','',12);
-    $obj_pdf -> AddPage();
-
-    $content = '';
-
-    $content .= '
-        <br/>
-        <h2 align ="center">The Care Crew</h2></br>
-        <h3 align ="center"> Bill</h3>
-        
-
     ';
+
+  }
   
-    $content .= generate_bill();
-    $obj_pdf -> writeHTML($content);
-    ob_end_clean();
-    $obj_pdf -> Output("bill.pdf",'I');
+  return $output;
+}
 
-  }
 
-  function get_specs(){
-    $con=mysqli_connect("localhost","root","","myhmsdb");
-    $query=mysqli_query($con,"select username,spec from doctb");
-    $docarray = array();
-      while($row =mysqli_fetch_assoc($query))
-      {
-          $docarray[] = $row;
-      }
-      return json_encode($docarray);
-  }
+if(isset($_GET["generate_bill"])){
+  require_once("TCPDF/tcpdf.php");
+  $obj_pdf = new TCPDF('P',PDF_UNIT,PDF_PAGE_FORMAT,true,'UTF-8',false);
+  $obj_pdf -> SetCreator(PDF_CREATOR);
+  $obj_pdf -> SetTitle("Generate Bill");
+  $obj_pdf -> SetHeaderData('','',PDF_HEADER_TITLE,PDF_HEADER_STRING);
+  $obj_pdf -> SetHeaderFont(Array(PDF_FONT_NAME_MAIN,'',PDF_FONT_SIZE_MAIN));
+  $obj_pdf -> SetFooterFont(Array(PDF_FONT_NAME_MAIN,'',PDF_FONT_SIZE_MAIN));
+  $obj_pdf -> SetDefaultMonospacedFont('helvetica');
+  $obj_pdf -> SetFooterMargin(PDF_MARGIN_FOOTER);
+  $obj_pdf -> SetMargins(PDF_MARGIN_LEFT,'5',PDF_MARGIN_RIGHT);
+  $obj_pdf -> SetPrintHeader(false);
+  $obj_pdf -> SetPrintFooter(false);
+  $obj_pdf -> SetAutoPageBreak(TRUE, 10);
+  $obj_pdf -> SetFont('helvetica','',12);
+  $obj_pdf -> AddPage();
+
+  $content = '';
+
+  $content .= '
+      <br/>
+      <h2 align ="center">The Care Crew</h2></br>
+      <h3 align ="center"> Bill</h3>
+      
+
+  ';
+ 
+  $content .= generate_bill();
+  $obj_pdf -> writeHTML($content);
+  ob_end_clean();
+  $obj_pdf -> Output("bill.pdf",'I');
+
+}
+
+function get_specs(){
+  $con=mysqli_connect("localhost","root","","myhmsdb");
+  $query=mysqli_query($con,"select username,spec from doctb");
+  $docarray = array();
+    while($row =mysqli_fetch_assoc($query))
+    {
+        $docarray[] = $row;
+    }
+    return json_encode($docarray);
+}
 
 ?>
 <html lang="en">
@@ -501,7 +451,6 @@ if(isset($_GET['complete']))
       <a class="list-group-item list-group-item-action" id="list-analytics-list" data-toggle="list" href="#list-analytics" role="tab" aria-controls="home">Analytics</a>
       <a class="list-group-item list-group-item-action" id="list-docs-list" data-toggle="list" href="#list-docs" role="tab" aria-controls="home">Documents</a>
       <a class="list-group-item list-group-item-action" id="list-predict-list" data-toggle="list" href="#list-predict" role="tab">Disease Prediction</a>
-      <a class="list-group-item list-group-item-action" id="list-brain-list" data-toggle="list" href="#list-brain" role="tab">Brain Tumor Detection</a>
     </div><br>
   </div>
   <div class="col-md-8" style="margin-top: 3%;">
@@ -921,61 +870,50 @@ if(isset($_GET['complete']))
                   <h4 class="StepTitle" style="margin-top: 5%;">AI Health Check</h4>
                   <p class="text-muted">Multiple Disease Prediction System</p>
                   <p class="links cl-effect-1">
-                    <a href="#list-predict" onclick="clickDiv('#list-predict-list')">
-                      <i class="fa fa-stethoscope"></i> Start Health Check
+                    <a href="https://multiple-disease-prediction-hms.streamlit.app/" target="_blank">
+                      Check Your Health Now
                     </a>
                   </p>
                   <div class="small mt-2">
-                    <span class="text-muted">Analyze your risk for:</span>
+                    <span class="text-muted">Analyze your risk for multiple conditions:</span>
                     <ul class="list-unstyled mt-2">
                       <li><i class="fa fa-check-circle text-success"></i> Diabetes</li>
                       <li><i class="fa fa-check-circle text-success"></i> Heart Disease</li>
                       <li><i class="fa fa-check-circle text-success"></i> Liver Disease</li>
-                      <li><i class="fa fa-check-circle text-success"></i> Parkinson's Disease</li>
+                      <li><i class="fa fa-check-circle text-success"></i> And more...</li>
                     </ul>
                   </div>
                 </div>
               </div>
             </div>
 
-            <!-- Brain Tumor Detection Panel -->
-            <div class="col-sm-4 mb-4">
-                <div class="panel panel-white no-radius text-center shadow-sm">
-                    <div class="panel-body">
-                        <span class="fa-stack fa-2x"> 
-                            <i class="fa fa-square fa-stack-2x text-primary"></i> 
-                            <i class="fa fa-heartbeat fa-stack-1x fa-inverse"></i> 
-                        </span>
-                        <h4 class="StepTitle" style="margin-top: 5%;">Brain Tumor Detection</h4>
-                        <p class="text-muted">AI-Powered MRI Analysis</p>
-                        <p class="links cl-effect-1">
-                            <a href="#list-brain" onclick="clickDiv('#list-brain-list')">
-                                Launch Detection System
-                            </a>
-                        </p>
-                        <div class="small mt-2">
-                            <ul class="list-unstyled mt-2">
-                                <li><i class="fa fa-check-circle text-success"></i> MRI Analysis</li>
-                                <li><i class="fa fa-check-circle text-success"></i> Real-time Results</li>
-                                <li><i class="fa fa-check-circle text-success"></i> High Accuracy</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
           </div>
         </div>
       </div>
 
-<div class="tab-pane fade" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
+      <div class="tab-pane fade" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
         <div class="container-fluid">
           <div class="card">
             <div class="card-body">
               <center><h4>Create an appointment</h4></center><br>
-              <form class="form-group" method="post" action="admin-panel.php">
+              <form class="form-group" method="post" action="admin-panel.php" id="appointmentForm">
                 <div class="row">
-                  <div class="col-md-4">
+                  
+                  <!-- <?php
+
+                        $con=mysqli_connect("localhost","root","","myhmsdb");
+                        $query=mysqli_query($con,"select username,spec from doctb");
+                        $docarray = array();
+                          while($row =mysqli_fetch_assoc($query))
+                          {
+                              $docarray[] = $row;
+                          }
+                          echo json_encode($docarray);
+
+                  ?> -->
+        
+
+                    <div class="col-md-4">
                           <label for="spec">Specialization:</label>
                         </div>
                         <div class="col-md-8">
@@ -1022,23 +960,71 @@ if(isset($_GET['complete']))
               };
             </script>
 
+                  
+                  
+
+                  
+                        <!-- <div class="col-md-4"><label for="doctor">Doctors:</label></div>
+                                <div class="col-md-8">
+                                    <select name="doctor" class="form-control" id="doctor1" required="required">
+                                      <option value="" disabled selected>Select Doctor</option>
+                                      
+                                    </select>
+                                </div>
+                                <br><br> -->
+
+                                <!-- <script>
+                                  document.getElementById("spec").onchange = function updateSpecs(event) {
+                                      var selected = document.querySelector(`[data-value=${this.value}]`).getAttribute("value");
+                                      console.log(selected);
+
+                                      var options = document.getElementById("doctor1").querySelectorAll("option");
+
+                                      for (i = 0; i < options.length; i++) {
+                                        var currentOption = options[i];
+                                        var category = options[i].getAttribute("data-spec");
+
+                                        if (category == selected) {
+                                          currentOption.style.display = "block";
+                                        } else {
+                                          currentOption.style.display = "none";
+                                        }
+                                      }
+                                    }
+                                </script> -->
+
+                        
+                    <!-- <script>
+                    let data = 
+                
+              document.getElementById('spec').onchange = function updateSpecs(e) {
+                let values = data.filter(obj => obj.spec == this.value).map(o => o.username);   
+                document.getElementById('doctor1').value = document.querySelector(`[value=${values}]`).getAttribute('data-value');
+              };
+            </script> -->
+
+
+                  
                   <div class="col-md-4"><label for="consultancyfees">
                                 Consultancy Fees
                               </label></div>
                               <div class="col-md-8">
+                              <!-- <div id="docFees">Select a doctor</div> -->
                               <input class="form-control" type="text" name="docFees" id="docFees" readonly="readonly"/>
                   </div><br><br>
 
-                  <div class="col-md-4"><label>Date</label></div>
-                  <div class="col-md-8"><input type="date" class="form-control datepicker" name="appdate"></div><br><br>
-
-                  <div class="col-md-4"><label>Time</label></div>
+                  <div class="col-md-4"><label>Appointment Date</label></div>
                   <div class="col-md-8">
-                    <input type="time" class="form-control" name="apptime">
+                    <input type="date" class="form-control datepicker" name="appdate" id="appdate" required>
+                  </div><br><br>
+
+                  <div class="col-md-4"><label>Appointment Time</label></div>
+                  <div class="col-md-8">
+                    <input type="time" class="form-control" name="apptime" id="apptime" required>
                   </div><br><br>
 
                   <div class="col-md-4">
-                    <input type="submit" name="app-submit" value="Create new entry" class="btn btn-primary" id="inputbtn">
+                    <input type="submit" name="app-submit" value="Create new entry" class="btn btn-primary" id="submitBtn">
                   </div>
                   <div class="col-md-8"></div>                  
                 </div>
@@ -1261,34 +1247,14 @@ if(isset($_GET['complete']))
       <div class="tab-pane fade" id="list-health" role="tabpanel" aria-labelledby="list-health-list">
         <div class="card">
             <div class="card-body">
+              <div class="row mb-4">
+                <div class="col-md-6">
+                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#healthDetailsModal">
+                    View Health Details
+                  </button>
+                </div>
+              </div>
                 <h4 class="card-title">Update Health Details</h4>
-                <?php
-                // Display current health information at the top
-                $health_query = mysqli_query($con, "SELECT * FROM patient_health_details WHERE pid='$pid'");
-                if($health_info = mysqli_fetch_array($health_query)) {
-                    $height_m = $health_info['height'] / 100;
-                    $bmi = round($health_info['weight'] / ($height_m * $height_m), 1);
-                    echo "<div class='alert alert-info mb-4'>
-                        <h5>Current Health Information</h5>
-                        <div class='row'>
-                            <div class='col-md-6'>
-                                <p><strong>Age:</strong> ".$health_info['age']." years</p>
-                                <p><strong>Blood Group:</strong> ".$health_info['blood_group']."</p>
-                                <p><strong>Weight:</strong> ".$health_info['weight']." kg</p>
-                                <p><strong>Height:</strong> ".$health_info['height']." cm</p>
-                                <p><strong>BMI:</strong> ".$bmi." (".getBMICategory($bmi).")</p>
-                            </div>
-                            <div class='col-md-6'>
-                                <p><strong>Medical Conditions:</strong> ".($health_info['medical_conditions'] ?: 'None')."</p>
-                                <p><strong>Allergies:</strong> ".($health_info['allergies'] ?: 'None')."</p>
-                                <p><strong>Current Medications:</strong> ".($health_info['current_medications'] ?: 'None')."</p>
-                                <p><strong>Emergency Contact:</strong> ".($health_info['emergency_contact'] ?: 'Not provided')."</p>
-                                <p><strong>Last Updated:</strong> ".date('d M Y', strtotime($health_info['last_updated']))."</p>
-                            </div>
-                        </div>
-                    </div>";
-                }
-                ?>
                 <form class="form-group" method="post" action="update_health_details.php">
                     <div class="row">
                         <div class="col-md-4"><label>Age:</label></div>
@@ -1320,7 +1286,7 @@ if(isset($_GET['complete']))
                     </div><br>
                     <div class="row">
                         <div class="col-md-4"><label>Height (cm):</label></div>
-                        <div class="col-md-8">
+                        <div class="col-md-8"></div></div>
                             <input type="number" step="0.01" class="form-control" name="height" required>
                         </div>
                     </div><br>
@@ -1340,30 +1306,59 @@ if(isset($_GET['complete']))
                         <div class="col-md-4"><label>Current Medications:</label></div>
                         <div class="col-md-8">
                             <textarea class="form-control" name="current_medications" rows="3"></textarea>
-                        </div>
-                    </div><br>
-                    <div class="row">
-                        <div class="col-md-4"><label>Emergency Contact:</label></div>
-                        <div class="col-md-8">
-                            <input type="text" class="form-control" name="emergency_contact" placeholder="Emergency Contact Name">
-                        </div>
-                    </div><br>
-                    <div class="row">
-                        <div class="col-md-4"><label>Emergency Contact Phone:</label></div>
-                        <div class="col-md-8">
-                            <input type="tel" class="form-control" name="emergency_contact_phone" placeholder="Emergency Contact Phone">
-                        </div>
-                    </div><br>
-                    <div class="row">
-                        <div class="col-md-4"></div>
-                        <div class="col-md-8">
-                            <input type="submit" name="update_health_details" value="Update Details" class="btn btn-primary">
-                        </div>
-                    </div>
+                    <input type="submit" name="update_health_details" value="Update Details" class="btn btn-primary">
                 </form>
             </div>
         </div>
     </div>
+
+  <!-- Health Details Modal -->
+  <div class="modal fade" id="healthDetailsModal" tabindex="-1" role="dialog" aria-labelledby="healthDetailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="healthDetailsModalLabel">My Health Details</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-6">
+              <h6>Personal Information</h6>
+              <p><strong>Patient ID:</strong> <?php echo $pid; ?></p>
+              <p><strong>Name:</strong> <?php echo $fname . ' ' . $lname; ?></p>
+              <p><strong>Gender:</strong> <?php echo $gender; ?></p>
+              <p><strong>Email:</strong> <?php echo $email; ?></p>
+              <p><strong>Contact:</strong> <?php echo $contact; ?></p>
+            </div>
+            <div class="col-md-6">
+              <h6>Health Information</h6>
+              <?php
+              // Fetch health details
+              $health_query = mysqli_query($con, "SELECT * FROM patient_health_details WHERE pid='$pid'");
+              if($health_info = mysqli_fetch_array($health_query)) {
+                echo "<p><strong>Age:</strong> ".$health_info['age']."</p>";
+                echo "<p><strong>Blood Group:</strong> ".$health_info['blood_group']."</p>";
+                echo "<p><strong>Weight:</strong> ".$health_info['weight']." kg</p>";
+                echo "<p><strong>Height:</strong> ".$health_info['height']." cm</p>";
+                echo "<p><strong>Medical Conditions:</strong> ".$health_info['medical_conditions']."</p>";
+                echo "<p><strong>Allergies:</strong> ".$health_info['allergies']."</p>";
+                echo "<p><strong>Current Medications:</strong> ".$health_info['current_medications']."</p>";
+                echo "<p><strong>Emergency Contact:</strong> ".$health_info['emergency_contact']." (".$health_info['emergency_contact_phone'].")</p>";
+              } else {
+                echo "<p>No health details available</p>";
+              }
+              ?>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
       <div class="tab-pane fade" id="list-messages" role="tabpanel" aria-labelledby="list-messages-list">...</div>
       <div class="tab-pane fade" id="list-settings" role="tabpanel" aria-labelledby="list-settings-list">
@@ -1424,45 +1419,14 @@ if(isset($_GET['complete']))
     </div>
   </div>
 </div>
-
-<!-- Brain Tumor Detection Section -->
-<div class="tab-pane fade" id="list-brain" role="tabpanel" aria-labelledby="list-brain-list">
-  <div class="card">
-    <div class="card-body">
-      <h4 class="card-title">Brain Tumor Detection System</h4>
-      <div class="alert alert-info">
-        <p><strong>AI-Powered Brain MRI Analysis</strong></p>
-        <p>Upload your MRI scan for instant tumor detection analysis:</p>
-        <ul>
-          <li>Advanced AI image processing</li>
-          <li>Quick and accurate results</li>
-          <li>Secure and confidential analysis</li>
-          <li>Professional-grade detection system</li>
-        </ul>
-      </div>
-      
-      <div class="text-center my-4">
-        <a href="https://brain-tumor-detection-master.streamlit.app/" target="_blank" class="btn btn-primary btn-lg">
-          <i class="fa fa-microscope"></i> Launch Detection System
-        </a>
-      </div>
-
-      <div class="alert alert-warning mt-3">
-        <i class="fa fa-exclamation-triangle"></i> 
-        <strong>Important Note:</strong> This tool is for preliminary screening only. Please consult with a qualified medical professional for proper diagnosis and treatment.
-      </div>
-    </div>
-  </div>
-</div>
-
     </div>
   </div>
 </div>
    </div>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6yp9BEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.10.1/sweetalert2.all.min.js"></script>
     <!-- Add Chart.js -->
@@ -1742,6 +1706,7 @@ if(isset($_GET['complete']))
           const href = this.getAttribute('href');
           clickDiv(href);
         });
+      });
       
       // Handle tab switching from dashboard links
       document.querySelectorAll('.panel-body a[onclick]').forEach(link => {
@@ -1750,6 +1715,7 @@ if(isset($_GET['complete']))
           const targetId = this.getAttribute('onclick').match(/'([^']+)'/)[1];
           clickDiv(targetId);
         });
+      });
     });
     </script>
 
@@ -2014,113 +1980,3 @@ if(isset($_GET['complete']))
     </script>
   </body>
 </html>
-<script>
-document.getElementById('appointmentForm').onsubmit = function(e) {
-    var date = document.getElementById('appdate').value;
-    var time = document.getElementById('apptime').value;
-    var today = new Date().toISOString().split('T')[0];
-    
-    if(date < today) {
-        if (!$('#doctorSelect').val()) {
-        alert("Cannot book appointment for past date!");
-        e.preventDefault();
-        return false;
-    }
-
-    var timeArr = time.split(':');
-    var selectedTime = new Date();
-    selectedTime.setHours(timeArr[0], timeArr[1]);
-
-    var startTime = new Date();
-    startTime.setHours(9, 0); // 9:00 AM
-    
-    var endTime = new Date();
-    endTime.setHours(18, 0); // 6:00 PM
-
-    if(selectedTime < startTime || selectedTime > endTime) {
-        alert("Please select appointment time between 9:00 AM and 6:00 PM!");
-        e.preventDefault();
-        return false;
-    }
-
-    return true;
-}
-
-  </body>
-</html>
-<script>
-document.getElementById('appointmentForm').onsubmit = function(e) {
-    var date = document.getElementById('appdate').value;
-    var time = document.getElementById('apptime').value;
-    var today = new Date().toISOString().split('T')[0];
-    
-    if(date < today) {
-        alert("Cannot book appointment for past date!");
-        e.preventDefault();
-        return false;
-    }
-
-    var timeArr = time.split(':');
-    var selectedTime = new Date();
-    selectedTime.setHours(timeArr[0], timeArr[1]);
-
-    var startTime = new Date();
-    startTime.setHours(9, 0); // 9:00 AM
-    
-    var endTime = new Date();
-    endTime.setHours(18, 0); // 6:00 PM
-
-    if(selectedTime < startTime || selectedTime > endTime) {
-        alert("Please select appointment time between 9:00 AM and 6:00 PM!");
-        e.preventDefault();
-        return false;
-    }
-
-    return true;
-}
-</script>
-
-<!-- Add this function before the closing PHP tag -->
-<?php
-function getBMICategory($bmi) {
-    if($bmi < 18.5) return "Underweight";
-    if($bmi < 25) return "Normal";
-    if($bmi < 30) return "Overweight";
-    return "Obese";
-}
-?>
-
-<!-- Add this JavaScript before the closing body tag -->
-<script>
-$(document).ready(function() {
-    // Pre-fill the update form with existing data when available
-    <?php
-    $health_query = mysqli_query($con, "SELECT * FROM patient_health_details WHERE pid='$pid'");
-    if($health_info = mysqli_fetch_array($health_query)) {
-        echo "
-        $('input[name=\"age\"]').val('".$health_info['age']."');
-        $('select[name=\"blood_group\"]').val('".$health_info['blood_group']."');
-        $('input[name=\"weight\"]').val('".$health_info['weight']."');
-        $('input[name=\"height\"]').val('".$health_info['height']."');
-        $('textarea[name=\"medical_conditions\"]').val('".$health_info['medical_conditions']."');
-        $('textarea[name=\"allergies\"]').val('".$health_info['allergies']."');
-        $('textarea[name=\"current_medications\"]').val('".$health_info['current_medications']."');
-        $('input[name=\"emergency_contact\"]').val('".$health_info['emergency_contact']."');
-        $('input[name=\"emergency_contact_phone\"]').val('".$health_info['emergency_contact_phone']."');
-        ";
-    }
-    ?>
-
-    // Show success message if update was successful
-    <?php if(isset($_SESSION['health_update_success'])) { ?>
-        alert('<?php echo $_SESSION['health_update_success']; ?>');
-        <?php unset($_SESSION['health_update_success']); ?>
-    <?php } ?>
-
-    // Show error message if update failed
-    <?php if(isset($_SESSION['health_update_error'])) { ?>
-        alert('<?php echo $_SESSION['health_update_error']; ?>');
-        <?php unset($_SESSION['health_update_error']); ?>
-    <?php } ?>
-});
-</script>
